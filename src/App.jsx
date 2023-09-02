@@ -9,6 +9,7 @@ import Notification from "./pages/Notification";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home"
 import Login from "./pages/Login"
+import Signup from "./pages/Signup";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/notification" element={<Notification/>}/>
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/login" element={<Login/>}/>
+                <Route path="/Signup" element={<Signup/>}/>
             </Routes>
             <NavBar/>
         </Router>
