@@ -13,8 +13,8 @@ export default {
         'custom-widget-color': '#DEF0FF'
       },
       fontSize: {
-        'custom-size-50': '60px',
         'custom-size-30': '30px',
+        'custom-size-60': '60px'
       },
       borderRadius: {
         'custom-t': '40px'
