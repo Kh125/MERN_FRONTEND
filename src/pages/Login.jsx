@@ -2,30 +2,38 @@ import React from 'react'
 
 const Login = ()=>{
     return <>
+<div class="p-10">
+    <h1 class="mb-8 font-extrabold text-4xl">Register</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-<div class="h-screen bg-gradient-to-br from-blue-600 to-indigo-600 flex justify-center items-center w-full">
-  <form>
-    <div class="bg-white px-10 py-8 rounded-xl w-screen shadow-md max-w-sm">
-      <div class="space-y-4">
-        <h1 class="text-center text-2xl font-semibold text-gray-600">Register</h1>
-        <div>
-          <label for="email" class="block mb-1 text-gray-600 font-semibold">Username</label>
-          <input type="text" class="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full" />
-        </div>
-        <div>
-          <label for="email" class="block mb-1 text-gray-600 font-semibold">Email</label>
-          <input type="text" class="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full" />
-        </div>
-        <div>
-          <label for="email" class="block mb-1 text-gray-600 font-semibold">Password</label>
-          <input type="text" class="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full" />
-        </div>
-      </div>
-      <button class="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 py-2 rounded-md text-lg tracking-wide">Register</button>
+        <form>
+            <div>
+                <label class="block font-semibold" for="name">Name</label>
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="name" type="text" name="name" required="required" autofocus="autofocus">
+                </input>
+            </div>
+
+            <div class="mt-4">
+                <label class="block font-semibold" for="email">Email</label>
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="email" type="email" name="email" required="required">
+                </input>
+            </div>
+
+            <div class="mt-4">
+                <label class="block font-semibold" for="password">Password</label>
+                <input class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full" id="password" type="password" name="password" required="required" autocomplete="new-password">
+                </input>
+            </div>
+
+            <div class="flex items-center justify-between mt-8">
+                <button type="submit" class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">Register</button>
+                <a class="font-semibold">
+                    Already registered?
+                </a>
+            </div>
+        </form>
     </div>
-  </form>
 </div>
-
     </>
 }
 export default Login
