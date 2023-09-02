@@ -59,7 +59,7 @@ const Schedule = ()=>{
                 <h1 className="text-custom-size-30 font-bold">Uni-Notify</h1>
             </div>
             <div className="px-4 my-6">
-                <h1 className="text-custom-time text-custom-size-50 font-semibold text-right">
+                <h1 className="text-custom-time text-custom-size-60 font-semibold text-right">
                     {hourMin} <span className="uppercase text-custom-color text-custom-size-30">{amPm}</span>
                 </h1>
             </div>
