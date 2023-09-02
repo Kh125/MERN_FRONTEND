@@ -8,6 +8,7 @@ import Schedule from "./pages/Schedule";
 import Notification from "./pages/Notification";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home"
+import Login from "./pages/Login"
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/schedule" element={<Schedule/>}/>
                 <Route path="/notification" element={<Notification/>}/>
                 <Route path="/profile" element={<Profile/>}/>
+                <Route path="/login" element={<Login/>}/>
             </Routes>
             <NavBar/>
         </Router>
