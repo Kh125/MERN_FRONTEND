@@ -2,19 +2,24 @@ import React, { useEffect, useState } from "react";
 import ScheduleWidget from "../components/ScheduleWidget";
 import axios from "axios";
 import { useAuth } from "../hooks/auth";
-import { Link } from "react-router-dom";
+import RedirectComponent from "../components/Redirect";
 
 const Schedule = () => {
   const user = useAuth();
   const [schedule, setSchedule] = useState(undefined);
+
   const fetchSchedule = async () => {
     const response = await axios.get("/api/routes/getSchedules");
     if (response.status == 200) setSchedule(response.data);
   };
+  
   useEffect(() => {
-    fetchSchedule();
+    if(user) {
+      fetchSchedule();
+    }
   }, []);
 
+  // for current time
   const [hourMin, amPm] = getCurrentTime12HourFormat();
   const date = new Date();
   const isWeekend = date.getDay() === 0 || date.getDay() === 6;
@@ -29,7 +34,7 @@ const Schedule = () => {
               <h1 className="text-custom-size-30 font-bold">Uni-Notify</h1>
             </div>
             <div className="px-4 my-6">
-              <h1 className="text-custom-time text-custom-size-60 font-semibold text-right">
+              <h1 className="text-custom-time text-custom-size-60 font-extrabold text-right">
                 {hourMin}{" "}
                 <span className="uppercase text-custom-color text-custom-size-30">
                   {amPm}
@@ -47,18 +52,20 @@ const Schedule = () => {
             {!isWeekend ? (
                 <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
                     <div class="flex space-x-6 justify-center mb-4">
+                        <button class="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                        Today
+                        </button>
                         <button class="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
                         All
                         </button>
-                        <button class="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
-                        New
-                        </button>
                     </div>
-                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-5">
+                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
                         {date.getDay() === 1 &&
                         schedule &&
                         schedule[0].Schedule.Monday.map((s) => (
-                            <ScheduleWidget key={s.SubjectID} schedule={s} />
+                          <div>
+                            <ScheduleWidget key={s.SubjectID} schedule={s}/>
+                          </div>
                         ))}
                         {date.getDay() === 2 &&
                         schedule &&
@@ -94,7 +101,7 @@ const Schedule = () => {
           </div>
         </div>
       ) : (
-        <Link to={"/login"}>Login</Link>
+        <RedirectComponent />
       )}
     </>
   );
@@ -120,4 +127,5 @@ const getCurrentTime12HourFormat = () => {
 
   return [`${hours}:${minutes}`, amPm];
 };
+
 export default Schedule;

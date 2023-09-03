@@ -4,17 +4,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { auth } from "../shared/auth.state";
 import axios from "axios";
+import RedirectComponent from "../components/Redirect";
 
 const Profile = () => {
   const user = useAuth();
   const [isAuth, setIsAuth] = useRecoilState(auth);
   const navigate = useNavigate();
+  
   const onLogout = async () => {
     await axios.post("/api/routes/logout").then(() => {
       setIsAuth(false);
       navigate("/");
     });
   };
+  
   return (
     <>
       {user ? (
@@ -55,7 +58,7 @@ const Profile = () => {
           </button>
         </div>
       ) : (
-        <Link to="/login">Login</Link>
+        <RedirectComponent />
       )}
     </>
   );
