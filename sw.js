@@ -5,6 +5,8 @@ const public_key = 'BM8TS8LROkfyBsbGvSE8z7BjYZyNkgyxI_x7T6b22qDbKkWYK4Up9ljpYtA6
 const urls_to_cache = [
     '/',
     'vite.svg',
+    'relax.svg',
+    '/schedule'
 ]
 
 //  install event
@@ -34,24 +36,28 @@ self.addEventListener('activate', evt => {
 
 //fetch event handler
 self.addEventListener('fetch', evt => {
+    let request = evt.request;
+
     evt.respondWith(
-        caches.match(evt.request).then(cacheRes => {
-            // Check if the request URL starts with 'http://openweathermap.org/img' and store it for offline use
-            if (evt.request.url.startsWith('http://openweathermap.org/img')) {
-              return cacheRes || fetch(evt.request).then(fetchRes => {
+        caches.match(request).then(cacheRes => {
+            return cacheRes || fetch(request).then(fetchRes => {
+              // Check if the request URL starts with predefined url and store it for offline use
+              if (evt.request.url.startsWith('http://openweathermap.org/img') ||
+                evt.request.url.startsWith('http://localhost:5173/api/routes/getSchedules') ||
+                evt.request.url.startsWith('http://localhost:5173/api/routes/getcurrentuser')) {
                   return caches.open(dynamic_cache_name).then(cache => {
-                      cache.put(evt.request.url, fetchRes.clone())
+                      cache.put(request.url, fetchRes.clone())
                       return fetchRes
                   })
-              })
-            } else {
-              // For other requests, don't cache them
-              return fetch(evt.request);
-            }
+              } else {
+                // For other requests, don't cache them
+                return fetchRes;
+              }
+            })
         }).catch(() => {
             console.log("Failed to fetch!");
         })
-      )
+    )
 })
 
 self.addEventListener('notificationclick', function (event) {

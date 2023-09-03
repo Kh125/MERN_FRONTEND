@@ -17,6 +17,7 @@ const Schedule = () => {
 
   const [hourMin, amPm] = getCurrentTime12HourFormat();
   const date = new Date();
+  const isWeekend = date.getDay() === 0 || date.getDay() === 6;
 
   return (
     <>
@@ -37,52 +38,58 @@ const Schedule = () => {
             </div>
             <div className="px-4 my-4">
               <h1 className="text-2xl font-semibold text-custom-class-title">
-                Upcoming Classes
+                {isWeekend ? 'No Upcoming Classes' : 'Upcoming Classes'}
               </h1>
             </div>
             {/* Title Section */}
 
             {/* Upcoming Class section */}
-            <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
-              <div class="flex space-x-6 justify-center mb-4">
-                <button class="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
-                  All
-                </button>
-                <button class="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
-                  New
-                </button>
-              </div>
-              <div className="overflow-y-scroll max-h-[500px] pt-2 pb-5">
-                {(date.getDay() === 0 || date.getDay() === 6) && (
-                  <p className="text-lg text-white">Enjoy your weekend</p>
-                )}
-                {date.getDay() === 1 &&
-                  schedule &&
-                  schedule[0].Schedule.Monday.map((s) => (
-                    <ScheduleWidget key={s.SubjectID} schedule={s} />
-                  ))}
-                {date.getDay() === 2 &&
-                  schedule &&
-                  schedule[0].Schedule.Tuesday.map((s) => (
-                    <ScheduleWidget key={s.SubjectID} schedule={s} />
-                  ))}
-                {date.getDay() === 3 &&
-                  schedule &&
-                  schedule[0].Schedule.Wednesday.map((s) => (
-                    <ScheduleWidget key={s.SubjectID} schedule={s} />
-                  ))}
-                {date.getDay() === 4 &&
-                  schedule &&
-                  schedule[0].Schedule.Thursday.map((s) => (
-                    <ScheduleWidget key={s.SubjectID} schedule={s} />
-                  ))}
-                {date.getDay() === 5 &&
-                  schedule &&
-                  schedule[0].Schedule.Friday.map((s) => (
-                    <ScheduleWidget key={s.SubjectID} schedule={s} />
-                  ))}
-              </div>
-            </div>
+            {!isWeekend ? (
+                <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
+                    <div class="flex space-x-6 justify-center mb-4">
+                        <button class="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                        All
+                        </button>
+                        <button class="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                        New
+                        </button>
+                    </div>
+                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-5">
+                        {date.getDay() === 1 &&
+                        schedule &&
+                        schedule[0].Schedule.Monday.map((s) => (
+                            <ScheduleWidget key={s.SubjectID} schedule={s} />
+                        ))}
+                        {date.getDay() === 2 &&
+                        schedule &&
+                        schedule[0].Schedule.Tuesday.map((s) => (
+                            <ScheduleWidget key={s.SubjectID} schedule={s} />
+                        ))}
+                        {date.getDay() === 3 &&
+                        schedule &&
+                        schedule[0].Schedule.Wednesday.map((s) => (
+                            <ScheduleWidget key={s.SubjectID} schedule={s} />
+                        ))}
+                        {date.getDay() === 4 &&
+                        schedule &&
+                        schedule[0].Schedule.Thursday.map((s) => (
+                            <ScheduleWidget key={s.SubjectID} schedule={s} />
+                        ))}
+                        {date.getDay() === 5 &&
+                        schedule &&
+                        schedule[0].Schedule.Friday.map((s) => (
+                            <ScheduleWidget key={s.SubjectID} schedule={s} />
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div className="bg-transparent mx-2 my-32 p-4 flex flex-col justify-center items-center h-54 rounded-lg">
+                    <div className="flex justify-center items-center mb-4">
+                        <img src="/relax.svg" alt="Relax Img" style={{ width: "200px" }} />
+                    </div>
+                    <p className="text-custom-size-30 font-semibold text-center text-custom-time">Enjoy Your Weekend!</p>
+                </div>
+            )}
             {/* Upcoming Class section */}
           </div>
         </div>
