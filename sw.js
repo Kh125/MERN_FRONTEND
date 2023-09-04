@@ -6,17 +6,10 @@ const urls_to_cache = [
     '/',
     'vite.svg',
     'relax.svg',
-    '/schedule',
-    '/profile-avatar/1.svg',
-    '/profile-avatar/2.svg',
-    '/profile-avatar/3.svg',
-    '/profile-avatar/4.svg',
-    '/profile-avatar/5.svg',
-    '/profile-avatar/6.svg',
-    '/profile-avatar/7.svg',
-    '/profile-avatar/8.svg',
-    '/profile-avatar/9.svg',
-    '/profile-avatar/10.svg'
+    'location.svg',
+    'person.svg',
+    'clock.svg',
+    '/schedule'
 ]
 
 //  install event

@@ -3,26 +3,36 @@ import ScheduleWidget from "../components/ScheduleWidget";
 import axios from "axios";
 import { useAuth } from "../hooks/auth";
 import RedirectComponent from "../components/Redirect";
+import ScheduleDetail from "../components/ScheduleDetail";
 
 const Schedule = () => {
   const user = useAuth();
   const [schedule, setSchedule] = useState(undefined);
-
-  const fetchSchedule = async () => {
-    const response = await axios.get("/api/routes/getSchedules");
-    if (response.status == 200) setSchedule(response.data);
-  };
   
-  useEffect(() => {
-    if(user) {
-      fetchSchedule();
-    }
-  }, []);
+  // Schedule Detail
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [showDetailPage, setShowDetailPage] = useState(false);
+
+  const handleScheduleClick = (schedule) => {
+    setSelectedSchedule(schedule);
+    setShowDetailPage(true);
+  };
 
   // for current time
   const [hourMin, amPm] = getCurrentTime12HourFormat();
   const date = new Date();
   const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+  const fetchSchedule = async () => {
+    const response = await axios.get("/api/routes/getSchedules");
+    if (response.status == 200) setSchedule(response.data);
+  };
+
+  useEffect(() => {
+    if(user) {
+      fetchSchedule();
+    }
+  }, [user, isWeekend]);
 
   return (
     <>
@@ -51,11 +61,11 @@ const Schedule = () => {
             {/* Upcoming Class section */}
             {!isWeekend ? (
                 <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
-                    <div class="flex space-x-6 justify-center mb-4">
-                        <button class="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                    <div className="flex space-x-6 justify-center mb-4">
+                        <button className="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
                         Today
                         </button>
-                        <button class="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                        <button className="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
                         All
                         </button>
                     </div>
@@ -63,29 +73,37 @@ const Schedule = () => {
                         {date.getDay() === 1 &&
                         schedule &&
                         schedule[0].Schedule.Monday.map((s) => (
-                          <div>
-                            <ScheduleWidget key={s.SubjectID} schedule={s}/>
+                          <div onClick={() => handleScheduleClick(s)}>
+                            <ScheduleWidget key={s.SubjectID} schedule={s} />
                           </div>
                         ))}
                         {date.getDay() === 2 &&
                         schedule &&
                         schedule[0].Schedule.Tuesday.map((s) => (
+                          <div onClick={() => handleScheduleClick(s)}>
                             <ScheduleWidget key={s.SubjectID} schedule={s} />
+                          </div>
                         ))}
                         {date.getDay() === 3 &&
                         schedule &&
                         schedule[0].Schedule.Wednesday.map((s) => (
+                          <div onClick={() => handleScheduleClick(s)}>
                             <ScheduleWidget key={s.SubjectID} schedule={s} />
+                          </div>
                         ))}
                         {date.getDay() === 4 &&
                         schedule &&
                         schedule[0].Schedule.Thursday.map((s) => (
+                          <div onClick={() => handleScheduleClick(s)}>
                             <ScheduleWidget key={s.SubjectID} schedule={s} />
+                          </div>
                         ))}
                         {date.getDay() === 5 &&
                         schedule &&
                         schedule[0].Schedule.Friday.map((s) => (
+                          <div onClick={() => handleScheduleClick(s)}>
                             <ScheduleWidget key={s.SubjectID} schedule={s} />
+                          </div>
                         ))}
                     </div>
                 </div>
@@ -99,6 +117,13 @@ const Schedule = () => {
             )}
             {/* Upcoming Class section */}
           </div>
+
+          {/* Show Widget Detail Component */}
+          {showDetailPage && selectedSchedule && (
+            <ScheduleDetail selectedSchedule={selectedSchedule} 
+            onCloseDetailPage={() => setShowDetailPage(false)}
+            />
+          )}
         </div>
       ) : (
         <RedirectComponent />

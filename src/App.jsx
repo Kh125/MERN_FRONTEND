@@ -13,10 +13,6 @@ import Signup from "./pages/Signup";
 
 function App() {
     return (
-        // <div className="w-screen h-screen bg-blue-400">
-        //     <Weather />
-        // </div>
-
         <>
         <Router>
             <Routes>
