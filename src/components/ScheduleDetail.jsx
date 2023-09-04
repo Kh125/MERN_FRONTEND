@@ -35,7 +35,7 @@ const ScheduleDetail = (props) => {
                     <p className="font-semibold">{schedule.TeacherPhNo}</p>
                   </div>
                   <div>
-                    <a href={phoneRedirectLink} className="w-16 h-10 flex items-center justify-center border-orange-400 border-2 rounded-3xl font-bold">Call</a>
+                    <a href={phoneRedirectLink} className="w-16 h-8 flex items-center justify-center border-orange-400 border-2 rounded-3xl font-bold">Call</a>
                   </div>
                 </div>
 

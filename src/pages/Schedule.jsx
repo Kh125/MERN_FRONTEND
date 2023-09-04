@@ -29,7 +29,7 @@ const Schedule = () => {
   return (
     <>
       {user ? (
-        <div className="bg-custom-light-blue h-screen overflow-hidden">
+        <div className="max-w-md mx-auto bg-custom-light-blue h-screen overflow-hidden">
           <div className="bg-custom-light-blue py-4">
             {/* Title Section */}
             <div className="px-4 my-5">

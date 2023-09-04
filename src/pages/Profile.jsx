@@ -22,7 +22,7 @@ const Profile = () => {
   return (
     <>
       {user ? (
-        <>
+        <div className="max-w-md mx-auto">
           <ProfileSection user={user} />
           <button
             onClick={onLogout}
@@ -31,7 +31,7 @@ const Profile = () => {
           >
             Logout
           </button>
-        </>
+        </div>
       ) : (
         <RedirectComponent />
       )}
