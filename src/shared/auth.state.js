@@ -6,7 +6,7 @@ const fetchCurrentUser = ({ onSet }) => {
     if (newValue) {
       try {
         const response = await axios.get("/api/routes/getcurrentuser");
-
+        console.log(response);
         if (response.statusText == "OK") {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
