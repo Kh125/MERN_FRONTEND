@@ -5,10 +5,11 @@ export default {
   theme: {
     extend: {
       backgroundColor: {
-        "custom-blue": "#6484B4",
-        "custom-light-blue": "#C7DBE6",
-        "custom-dark": "#282D35",
-        "custom-widget-color": "#DEF0FF",
+        'custom-blue': '#6484B4',
+        'custom-semibold-blue': '#C7DBE6',
+        'custom-light-blue': '#C7DBE6',
+        'custom-dark': '#282D35',
+        'custom-widget-color': '#DEF0FF',
       },
       fontSize: {
         "custom-size-30": "30px",

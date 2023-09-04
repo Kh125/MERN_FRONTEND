@@ -6,7 +6,7 @@ const Notification = () => {
   const user = useAuth();
   
   return (
-    <>{user ? <p>Notification Page</p> : <RedirectComponent />}</>
+    <>{user ? <p className="max-w-md mx-auto">Notification Page</p> : <RedirectComponent />}</>
   );
 };
 export default Notification;

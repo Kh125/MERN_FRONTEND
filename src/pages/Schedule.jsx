@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import ScheduleWidget from "../components/ScheduleWidget";
-
 import { useAuth } from "../hooks/auth";
 import RedirectComponent from "../components/Redirect";
-
+import ScheduleDetail from "../components/ScheduleDetail";
 import { useSchedule } from "../hooks/schedule";
 
 const Schedule = () => {
   const schedules = useSchedule();
-
   const [todaySchedule, setTodaySchedule] = useState();
   console.log(schedules);
   const user = useAuth();
+
+  // Schedule Detail
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [showDetailPage, setShowDetailPage] = useState(false);
+
+  const handleScheduleClick = (schedule) => {
+    setSelectedSchedule(schedule);
+    setShowDetailPage(true);
+  };
 
   // for current time
   const [hourMin, amPm] = getCurrentTime12HourFormat();
@@ -22,7 +29,7 @@ const Schedule = () => {
   return (
     <>
       {user ? (
-        <div className="bg-custom-light-blue h-screen overflow-hidden">
+        <div className="max-w-md mx-auto bg-custom-light-blue h-screen overflow-hidden">
           <div className="bg-custom-light-blue py-4">
             {/* Title Section */}
             <div className="px-4 my-5">
@@ -58,29 +65,37 @@ const Schedule = () => {
                   {date.getDay() === 1 &&
                     schedules &&
                     schedules[0].Schedule.Monday.map((s) => (
-                      <div>
+                      <div onClick={() => handleScheduleClick(s)}>
                         <ScheduleWidget key={s.SubjectID} schedule={s} />
                       </div>
                     ))}
                   {date.getDay() === 2 &&
                     schedules &&
                     schedules[0].Schedule.Tuesday.map((s) => (
-                      <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      <div onClick={() => handleScheduleClick(s)}>
+                        <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      </div>
                     ))}
                   {date.getDay() === 3 &&
                     schedules &&
                     schedules[0].Schedule.Wednesday.map((s) => (
-                      <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      <div onClick={() => handleScheduleClick(s)}>
+                        <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      </div>
                     ))}
                   {date.getDay() === 4 &&
                     schedules &&
                     schedules[0].Schedule.Thursday.map((s) => (
-                      <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      <div onClick={() => handleScheduleClick(s)}>
+                        <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      </div>
                     ))}
                   {date.getDay() === 5 &&
                     schedules &&
                     schedules[0].Schedule.Friday.map((s) => (
-                      <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      <div onClick={() => handleScheduleClick(s)}>
+                        <ScheduleWidget key={s.SubjectID} schedule={s} />
+                      </div>
                     ))}
                 </div>
               </div>
@@ -100,6 +115,13 @@ const Schedule = () => {
             )}
             {/* Upcoming Class section */}
           </div>
+
+          {/* Show Widget Detail Component */}
+          {showDetailPage && selectedSchedule && (
+            <ScheduleDetail selectedSchedule={selectedSchedule} 
+            onCloseDetailPage={() => setShowDetailPage(false)}
+            />
+          )}
         </div>
       ) : (
         <RedirectComponent />
