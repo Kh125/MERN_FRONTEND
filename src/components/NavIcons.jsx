@@ -22,7 +22,7 @@ const NavIcons = ({ path, svg, text, aSvg }) => {
         <span
           className={`text-sm  ${
             active ? "text-blue-500" : "text-gray-500"
-          } capitalize dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 transition-all ease-linear`}
+          } capitalize dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500 transition-all ease-linear font-semibold`}
         >
           {text}
         </span>
