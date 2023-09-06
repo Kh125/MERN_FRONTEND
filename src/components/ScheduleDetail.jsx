@@ -16,8 +16,8 @@ const ScheduleDetail = (props) => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="bg-custom-blue rounded-full w-32 py-2 mb-6 text-center text-white">
-            Lecture
+          <div className="bg-custom-blue rounded-full w-32 py-2 mb-6 text-center text-white text-xl font-semibold">
+            {schedule.Lecture ? 'Lecture' : 'TDA'}
           </div>
           <h1 className="text-2xl font-bold text-center">{schedule.Subject}</h1>
         </div>
