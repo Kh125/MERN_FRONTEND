@@ -4,12 +4,15 @@ import { useAuth } from "../hooks/auth";
 import RedirectComponent from "../components/Redirect";
 import ScheduleDetail from "../components/ScheduleDetail";
 import { useSchedule } from "../hooks/schedule";
+import { useLocation } from "react-router-dom";
 
 const Schedule = () => {
   const schedules = useSchedule();
   const [todaySchedule, setTodaySchedule] = useState();
   console.log(schedules);
   const user = useAuth();
+  const location = useLocation();
+  console.log(location.pathname);
 
   // Schedule Detail
   const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -118,8 +121,9 @@ const Schedule = () => {
 
           {/* Show Widget Detail Component */}
           {showDetailPage && selectedSchedule && (
-            <ScheduleDetail selectedSchedule={selectedSchedule} 
-            onCloseDetailPage={() => setShowDetailPage(false)}
+            <ScheduleDetail
+              selectedSchedule={selectedSchedule}
+              onCloseDetailPage={() => setShowDetailPage(false)}
             />
           )}
         </div>
