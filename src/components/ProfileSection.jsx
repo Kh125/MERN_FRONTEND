@@ -1,6 +1,7 @@
 import { adventurerNeutral } from "@dicebear/collection";
 import { createAvatar } from "@dicebear/core";
 import React, { useMemo } from "react";
+import { convert } from "../utils/expend";
 
 const ProfileSection = ({ user }) => {
   const avatar = useMemo(() => {
@@ -8,31 +9,43 @@ const ProfileSection = ({ user }) => {
       seed: user._id,
     }).toDataUriSync();
   }, []);
+  const year = convert(user.academicYear);
+  const major = convert(user.major);
+
   return (
     <>
-      <div>
-        <p>Profile</p>
+      <div className="w-full pt-20 px-4 my-10 font-mono">
+        <p className="text-3xl font-semibold space-x-5"> Student Profile</p>
       </div>
-      <div className="w-full flex justify-center items-center  bg-white py-5  shadow dark:bg-gray-800 dark:border-gray-700">
-        <div className="flex flex-col">
-          <div className="flex w-full flex-row items-center justify-evenly ">
-            <img
-              className="w-24 h-24 mb-3 rounded-full shadow-lg border-2 border-cyan-700 p-1"
-              src={avatar}
-              alt="User Profile"
-            />
-            <div>
-              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                {user.username}
-              </h5>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {user.studentId}
-              </span>
-            </div>
+      <div className="border shadow-md rounded-lg border-amber-500 px-4 m-1 py-4 bg-blue-200 font-mono">
+        <div className="flex items-center justify-start">
+          <img
+            src={avatar}
+            className="w-28 h-28 rounded-full border-2 border-sky-500"
+            alt="user profile"
+          />
+          <div className="pl-10 flex flex-col h-full justify-around">
+            <p className="text-2xl font-semibold text-stone-900 space-x-2 capitalize ">
+              {user.username}
+            </p>
+            <span
+              className="text-lg text-gray-600 font-semibold capitalize
+            "
+            >
+              {user.studentId}
+            </span>
+          </div>
+        </div>
+        <div className="flex w-full justify-around items-center pt-4">
+          <div>
+            <p className="text-lg font-semibold text-stone-600">Major</p>
+            <p className="text-lg font-semibold text-stone-600">Year</p>
+            <p className="text-lg font-semibold text-stone-600">Email</p>
           </div>
           <div>
-            <p>{user.major}</p>
-            <p>{user.academicYear}</p>
+            <p className="text-lg font-semibold text-stone-900">{major}</p>
+            <p className="text-lg font-semibold text-stone-900">{year}</p>
+            <p className="text-lg font-semibold text-stone-900">{user.email}</p>
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ const Login = () => {
   console.log(isAuth);
   return (
     <>
-      <div class="flex justify-center items-center h-screen">
+      <div class="flex justify-center items-center h-screen font-mono">
         <div class="py-6 rounded-lg">
           <h1 class="text-left mb-8 font-bold text-4xl">Login</h1>
           <form onSubmit={onSubmit}>

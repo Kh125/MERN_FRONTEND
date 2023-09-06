@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import AnalogClock from "analog-clock-react";
+
 import ScheduleWidget from "../components/ScheduleWidget";
 import { useAuth } from "../hooks/auth";
 import RedirectComponent from "../components/Redirect";
@@ -9,10 +11,9 @@ import { useLocation } from "react-router-dom";
 const Schedule = () => {
   const schedules = useSchedule();
   const [todaySchedule, setTodaySchedule] = useState();
-  console.log(schedules);
+
   const user = useAuth();
   const location = useLocation();
-  console.log(location.pathname);
 
   // Schedule Detail
   const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -27,24 +28,34 @@ const Schedule = () => {
   const [hourMin, amPm] = getCurrentTime12HourFormat();
   const date = new Date();
   const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-  const day = date.getDay();
-
+  const options = {
+    width: "140px",
+    baseColor: "#282D35",
+    centerColor: "#2F69FC",
+    centerBorderColor: "#ffffff",
+    handColors: {
+      second: "#CF8D3F",
+      minute: "#DEF0FF",
+      hour: "#DEF0FF",
+    },
+  };
   return (
     <>
       {user ? (
-        <div className="max-w-md mx-auto bg-custom-light-blue h-screen overflow-hidden">
+        <div className="max-w-md mx-auto font-mono bg-custom-light-blue h-screen overflow-hidden">
           <div className="bg-custom-light-blue py-4">
             {/* Title Section */}
             <div className="px-4 my-5">
               <h1 className="text-custom-size-30 font-bold">Uni-Notify</h1>
             </div>
-            <div className="px-4 my-6">
-              <h1 className="text-custom-time text-custom-size-60 font-extrabold text-right">
+            <div className="pl-52 px-4">
+              {/* <h1 className="text-custom-time text-custom-size-60 font-extrabold text-right">
                 {hourMin}{" "}
                 <span className="uppercase text-custom-color text-custom-size-30">
                   {amPm}
                 </span>
-              </h1>
+              </h1> */}
+              <AnalogClock {...options} />
             </div>
             <div className="px-4 my-4">
               <h1 className="text-2xl font-semibold text-custom-class-title">
@@ -57,10 +68,10 @@ const Schedule = () => {
             {!isWeekend ? (
               <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
                 <div class="flex space-x-6 justify-center mb-4">
-                  <button class="bg-white text-black py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                  <button class="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
                     Today
                   </button>
-                  <button class="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                  <button class="bg-white text-custom-dark py-2 px-4 rounded-full w-28 h-12 font-semibold">
                     All
                   </button>
                 </div>
