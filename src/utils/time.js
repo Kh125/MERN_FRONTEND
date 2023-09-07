@@ -1,6 +1,11 @@
 export const timeStringToDate = (timeString) => {
     const [time, amPm] = timeString.split(' ');
-    const [hour, minute] = time.split(':').map(Number);
+    let [hour, minute] = time.split(':').map(Number);
+
+    if(amPm.toUpperCase() === 'PM' && hour !== 12) {
+      hour += 12
+    }
+
     const currentTime = new Date();
     currentTime.setHours(hour, minute, 0, 0);
     return currentTime;
@@ -17,22 +22,19 @@ export const findNearestOrEqualTime = (scheduleData, currentDateTime) => {
         const classItem = scheduleData[period];
         const fromTime = classItem.from;
         let classTime = timeStringToDate(fromTime);
+
+        // Calculate timeDiff between currentTime and classTime
         const timeDiff = classTime - currentDateTime;
 
+        // Check nearest class exist
         if (timeDiff > 0 && !nearestClassExists) {
           nearestClassExists = true
           nearestClass = classItem;
         }
 
-        const [hours, minutes] = fromTime.split(':');
-        let classTime24Hours = parseInt(hours, 10);
-
-        // Adjust hours for PM
-        if (fromTime.includes('PM') && classTime24Hours !== 12) {
-          classTime24Hours += 12;
-        }
-
-        const classTime24Minutes = parseInt(minutes, 10);
+        // Get Hour and Minute of ClassItem
+        const classTime24Hours = classTime.getHours();
+        const classTime24Minutes = classTime.getMinutes();
 
         // Get current time in 24-hour format
         const currentHours = currentDateTime.getHours();
