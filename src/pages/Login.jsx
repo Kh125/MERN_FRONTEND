@@ -19,7 +19,7 @@ const Login = () => {
       })
       .then(() => {
         setIsAuth(true);
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000);
       });
   };
   console.log(isAuth);
