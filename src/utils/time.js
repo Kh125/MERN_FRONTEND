@@ -8,7 +8,6 @@ export const timeStringToDate = (timeString) => {
 
 // Function to find the nearest or equal "from" time in the schedule
 export const findNearestOrEqualTime = (scheduleData, currentDateTime) => {
-    let nearestTimeDiff = Infinity;
     let nearestClass = null
     let nearestClassExists = false;
     let remainingClasses = 0;
@@ -16,15 +15,31 @@ export const findNearestOrEqualTime = (scheduleData, currentDateTime) => {
     for (const period in scheduleData) {
       if (scheduleData.hasOwnProperty(period)) {
         const classItem = scheduleData[period];
-        const classTime = timeStringToDate(classItem.from);
-        const timeDiff = Math.abs(classTime - currentDateTime);
-        if (timeDiff < nearestTimeDiff && !nearestClassExists) {
+        const fromTime = classItem.from;
+        let classTime = timeStringToDate(fromTime);
+        const timeDiff = classTime - currentDateTime;
+
+        if (timeDiff > 0 && !nearestClassExists) {
           nearestClassExists = true
-          nearestTimeDiff = timeDiff;
           nearestClass = classItem;
         }
 
-        if (classTime >= currentDateTime) {
+        const [hours, minutes] = fromTime.split(':');
+        let classTime24Hours = parseInt(hours, 10);
+
+        // Adjust hours for PM
+        if (fromTime.includes('PM') && classTime24Hours !== 12) {
+          classTime24Hours += 12;
+        }
+
+        const classTime24Minutes = parseInt(minutes, 10);
+
+        // Get current time in 24-hour format
+        const currentHours = currentDateTime.getHours();
+        const currentMinutes = currentDateTime.getMinutes();
+
+        // Compare the hours and minutes
+        if (classTime24Hours > currentHours || (classTime24Hours === currentHours && classTime24Minutes > currentMinutes)) {
           remainingClasses++;
         }
       }
@@ -33,9 +48,37 @@ export const findNearestOrEqualTime = (scheduleData, currentDateTime) => {
     return [nearestClass, remainingClasses];
   }
 
-  export const calculateRemainingTimeInMinute = (from, currentDateTime) => {
-    const fromTimeStamp = timeStringToDate(from)
-    return Math.floor((fromTimeStamp - currentDateTime)/(1000*60))
+  export const calculateRemainingTimeInMinute = (givenTime) => {
+    let givenTimeParts = givenTime.split(':');
+    let hours = parseInt(givenTimeParts[0], 10);
+    let minutes = parseInt(givenTimeParts[1].split(' ')[0], 10);
+
+    // Adjust for AM/PM
+    if (givenTimeParts[1].includes('PM') && hours !== 12) {
+        hours += 12;
+    } else if (givenTimeParts[1].includes('AM') && hours === 12) {
+        hours = 0;
+    }
+
+    // Get current time
+    let now = new Date();
+    let currentHours = now.getHours();
+    let currentMinutes = now.getMinutes();
+
+    let differenceInHours = hours - currentHours;
+    let differenceInMinutes = minutes - currentMinutes;
+
+    // Handle cases where the time difference may cross midnight
+    if (differenceInHours < 0) {
+        differenceInHours += 24;
+    }
+
+    if (differenceInMinutes < 0) {
+        differenceInMinutes += 60;
+        differenceInHours--;
+    }
+    
+    return [differenceInHours, differenceInMinutes];
   }
 
   export const transformToHMSFromMinute = (minute) => {
