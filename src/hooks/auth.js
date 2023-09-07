@@ -10,8 +10,6 @@ export const useAuth = () => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserData);
 
   useEffect(() => {
-    console.log({ isAuth });
-    console.log(localStorage.getItem("user") ? true : false);
     localStorage.getItem("user")
       ? setCurrentUser(JSON.parse(localStorage.getItem("user")))
       : setCurrentUser(null);

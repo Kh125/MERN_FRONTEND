@@ -6,6 +6,7 @@ import RedirectComponent from "../components/Redirect";
 import ScheduleDetail from "../components/ScheduleDetail";
 import { useSchedule } from "../hooks/schedule";
 import Relax from "../components/Relax";
+import WeekSchedule from "../components/WeekSchedule";
 
 const Schedule = () => {
   const schedules = useSchedule();
@@ -15,6 +16,7 @@ const Schedule = () => {
   // Schedule Detail
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [showDetailPage, setShowDetailPage] = useState(false);
+  const [isWeekTab, setWeekTab] = useState(false);
 
   const handleScheduleClick = (schedule) => {
     setSelectedSchedule(schedule);
@@ -34,6 +36,9 @@ const Schedule = () => {
       hour: "#DEF0FF",
     },
   };
+  const currentDay = date.toLocaleDateString("en-US", {
+    weekday: "long",
+  });
   return (
     <>
       {user ? (
@@ -46,66 +51,65 @@ const Schedule = () => {
             <div className="pl-52 px-4">
               <AnalogClock {...options} />
             </div>
-            {!showDetailPage && (
-              <div className="px-4 my-4">
-                <h1 className="text-2xl font-semibold text-custom-class-title">
-                  {isWeekend ? "No Classes for Today" : "Today Classes"}
-                </h1>
-              </div>
-            )}
-            {/* Title Section */}
 
-            {/* Today Class section */}
-            {!isWeekend && !showDetailPage ? (
-              <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
+            {!showDetailPage && (
+              <>
+                {" "}
+                <div className="px-4 my-4">
+                  <h1 className="text-2xl font-semibold text-custom-class-title">
+                    {isWeekend ? "No Classes for Today" : "Today Classes"}
+                  </h1>
+                </div>
                 <div className="flex space-x-6 justify-center mb-4">
-                  <button className="bg-custom-dark text-white py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                  <button
+                    onClick={() => setWeekTab(false)}
+                    className={`${
+                      isWeekTab
+                        ? "bg-white text-custom-dark"
+                        : "bg-custom-dark text-white"
+                    }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
+                  >
                     Today
                   </button>
-                  <button className="bg-white text-custom-dark py-2 px-4 rounded-full w-28 h-12 font-semibold">
+                  <button
+                    onClick={() => setWeekTab(true)}
+                    className={`${
+                      isWeekTab
+                        ? "bg-custom-dark text-white"
+                        : "bg-white text-custom-dark"
+                    }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
+                  >
                     All
                   </button>
                 </div>
-                <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
-                  {date.getDay() === 1 &&
-                    schedules &&
-                    schedules[0].Schedule.Monday.map((s) => (
-                      <div onClick={() => handleScheduleClick(s)}>
-                        <ScheduleWidget key={s._id} schedule={s} />
-                      </div>
-                    ))}
-                  {date.getDay() === 2 &&
-                    schedules &&
-                    schedules[0].Schedule.Tuesday.map((s) => (
-                      <div onClick={() => handleScheduleClick(s)}>
-                        <ScheduleWidget key={s._id} schedule={s} />
-                      </div>
-                    ))}
-                  {date.getDay() === 3 &&
-                    schedules &&
-                    schedules[0].Schedule.Wednesday.map((s) => (
-                      <div onClick={() => handleScheduleClick(s)}>
-                        <ScheduleWidget key={s._id} schedule={s} />
-                      </div>
-                    ))}
-                  {date.getDay() === 4 &&
-                    schedules &&
-                    schedules[0].Schedule.Thursday.map((s) => (
-                      <div onClick={() => handleScheduleClick(s)}>
-                        <ScheduleWidget key={s._id} schedule={s} />
-                      </div>
-                    ))}
-                  {date.getDay() === 5 &&
-                    schedules &&
-                    schedules[0].Schedule.Friday.map((s) => (
-                      <div onClick={() => handleScheduleClick(s)}>
-                        <ScheduleWidget key={s._id} schedule={s} />
-                      </div>
-                    ))}
-                </div>
-              </div>
+              </>
+            )}
+
+            {/* Title Section */}
+
+            {/* Today Class section */}
+            {isWeekTab ? (
+              schedules && <WeekSchedule schedule={schedules} />
             ) : (
-              <Relax />
+              <>
+                {!isWeekend && !showDetailPage ? (
+                  <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
+                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
+                      {schedules &&
+                        schedules[0].Schedule[currentDay].map((s) => (
+                          <div
+                            key={s._id}
+                            onClick={() => handleScheduleClick(s)}
+                          >
+                            <ScheduleWidget key={s._id} schedule={s} />
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                ) : (
+                  <Relax />
+                )}
+              </>
             )}
             {/* Today Class section */}
           </div>
