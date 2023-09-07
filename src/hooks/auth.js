@@ -8,6 +8,7 @@ const currentUserData = atom({
 export const useAuth = () => {
   const isAuth = useRecoilValue(auth);
   const [currentUser, setCurrentUser] = useRecoilState(currentUserData);
+  
   useEffect(() => {
     localStorage.getItem("user")
       ? setCurrentUser(JSON.parse(localStorage.getItem("user")))

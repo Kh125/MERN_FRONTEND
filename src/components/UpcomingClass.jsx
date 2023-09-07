@@ -17,9 +17,15 @@ const UpcomingClass = (props) => {
   
     // Display the result
     if (nearestClass) {
-      console.log(`Total ${nearestClass[1]} classes remaining.`)
-      remainingTime = transformToHMSFromMinute(calculateRemainingTimeInMinute(nearestClass[0].from, currentDateTime))
-      console.log(`Nearest or equal class: ${nearestClass[0].Subject} at ${nearestClass[0].from}`);
+        console.log(`Total ${nearestClass[1]} classes remaining.`)
+      
+        remainingTime = calculateRemainingTimeInMinute(nearestClass[0].from, currentDateTime)
+
+        setInterval(() => {
+            remainingTime = calculateRemainingTimeInMinute(nearestClass[0].from, currentDateTime)
+        }, 1000)
+
+        console.log(`Nearest or equal class: ${nearestClass[0].Subject} at ${nearestClass[0].from}`);
     } else {
       console.log('No classes found for today.');
     }
@@ -39,7 +45,7 @@ const UpcomingClass = (props) => {
                 <p className="text-custom-size-36 font-bold">
                     {remainingTime[0] ? `${formatTimeWithLeadingZero(remainingTime[0])}:` : ''}
                     {remainingTime[1] ? `${formatTimeWithLeadingZero(remainingTime[1])}` : ''}
-                    <span className="text-custom-upcoming-sub-text text-custom-size-18"> mins until</span>
+                    <span className="text-custom-upcoming-sub-text text-custom-size-18"> mins until Period {nearestClass[0].Period}</span>
                 </p>
                 <svg height="40px" width="40px" viewBox="0 0 512 512" fill="#2F69FC">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"/>
