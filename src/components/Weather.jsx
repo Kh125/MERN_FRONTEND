@@ -93,7 +93,7 @@ function Weather() {
 
   return (
     <div>
-      <div className="max-w-md mx-auto p-4 font-mono">
+      <div className="max-w-md mx-auto p-3 font-mono">
         {/* Current Weather */}
         <div className="p-5 mb-2 bg-[#C7DBE6] rounded-2xl">
           <div className="flex justify-between items-start">
