@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { auth } from "../shared/auth.state";
 const currentUserData = atom({
   key: "currentUser",
