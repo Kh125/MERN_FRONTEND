@@ -8,10 +8,7 @@ const interval = 1 * 60 * 1000; // 1 minutes
 const urls_to_cache = [
     '/',
     'vite.svg',
-    'relax.svg',
-    'location.svg',
-    'person.svg',
-    'clock.svg',
+    'notification-icon.svg',
     '/schedule'
 ]
 
@@ -21,7 +18,11 @@ self.addEventListener("install", (evt) => {
   evt.waitUntil(
     caches.open(static_cache_name).then((cache) => {
       console.log("Caching all assets!");
-      cache.addAll(urls_to_cache);
+      try {
+        cache.addAll(urls_to_cache);
+      } catch (error) {
+        console.error('Error caching resources:', error);
+      }
     })
   );
 });
@@ -50,14 +51,7 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        return caches.match(event.request)
-          .then((response) => {
-            if (response) {
-              return response;
-            } else {
-              console.log('No match in cache for:', event.request.url);
-            }
-          });
+        console.log("Can't fetch request");
       })
   );
   console.log("Fetch Event Activated.");
@@ -95,10 +89,179 @@ function showNotification(title, message) {
   // Send a push notification
   self.registration.showNotification(title, {
     body: message,
-    icon: 'vite.svg', // Path to the notification icon
+    icon: 'notification-icon.svg', // Path to the notification icon
   });
 }
 
 setInterval(() => {
-  showNotification("Hello", "From Service worker")
+  retrieveCurrentDateDataFromIndexedDB()
+    .then(({ currentDayData, triggeredPeriods }) => {
+      if(isWithinCustomizedTimeInterval()) {
+        const period = retrieveComingPeriodData(currentDayData, 15);
+        
+        if (period && !isMatched(period.Period, triggeredPeriods)) {
+              const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
+              showNotification('Upcoming Class', alertMessage);
+              storeTriggeredPeriodToIndexedDB(period.Period)
+        } else if (!period) {
+          showNotification('No classes');
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 }, interval);
+
+
+const isMatched = (inputPeriod, triggeredPeriods) => {
+  for (const period of triggeredPeriods) {
+    if (period.id === inputPeriod) {
+      return true
+    }
+  }
+
+  return false
+}
+
+//#region Private Methods
+const retrieveCurrentDateDataFromIndexedDB = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('uniNotify', 2);
+
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+    
+      // Create object store if it doesn't exist
+      if (!db.objectStoreNames.contains('triggeredPeriods')) {
+        db.createObjectStore('triggeredPeriods', { keyPath: 'id' });
+      }
+
+      if (!db.objectStoreNames.contains('schedule')) {
+        db.createObjectStore('schedule', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+
+    request.onsuccess = function(event) {
+      const db = event.target.result;
+      const transaction = db.transaction(['schedule'], 'readonly');
+      const objectStore = transaction.objectStore('schedule');
+      const getRequest = objectStore.get(1);
+
+      const currentDay = getCurrentDayString();
+
+      getRequest.onsuccess = function(event) {
+        const data = event.target.result;
+
+        if (data && data.schedule) {
+          const currentDayData = data.schedule[currentDay];
+
+          // Open a new transaction for triggeredPeriods
+          const triggeredTransaction = db.transaction(['triggeredPeriods'], 'readonly');
+          const triggeredObjectStore = triggeredTransaction.objectStore('triggeredPeriods');
+          const getTriggeredRequest = triggeredObjectStore.getAll();
+
+          getTriggeredRequest.onsuccess = function(event) {
+            const triggeredPeriods = event.target.result;
+
+            console.log(currentDayData, triggeredPeriods);
+            resolve({
+              currentDayData: currentDayData,
+              triggeredPeriods: triggeredPeriods
+            });
+          };
+
+          getTriggeredRequest.onerror = function(event) {
+            reject(event.target.error);
+          };
+        } else {
+          reject(new Error('No data for the current day'));
+        }
+      };
+
+      getRequest.onerror = function(event) {
+        reject(event.target.error);
+      };
+    };
+
+    request.onerror = function(event) {
+      reject(event.target.error);
+    };
+  });
+};
+
+const retrieveComingPeriodData = (periodList, minutes) => {
+  const currentTimestamp = Date.now()
+  const nextTimeStamp = currentTimestamp + (minutes * 60 * 1000) // 15 minute in milliseconds
+
+  for(const period of periodList) {
+    const fromTimestamp = getTimestamp(period.from)
+
+    if(fromTimestamp >= currentTimestamp && fromTimestamp <= nextTimeStamp){
+      return period
+    }
+  }
+
+  return false
+}
+
+const getCurrentDayString = () => {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const currentDate = new Date();
+  return daysOfWeek[currentDate.getDay()];
+}
+
+// Generate timestamp format for input time
+function getTimestamp(timeString) {
+  // Split the time string into hours and minutes
+  const [time, period] = timeString.split(' ');
+  const [hours, minutes] = time.split(':').map(Number);
+
+  // Create a new Date object with today's date and the specified time
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+
+  // Adjust for AM/PM by adding 12 hour for 24 hour format
+  if ((period === "PM" || period === "pm") && hours !== 12) {
+    date.setHours(date.getHours() + 12);
+  }
+
+  // Return the timestamp for input time eg. 7:30 AM
+  return date.getTime();
+}
+
+function isTimeWithinInterval(startHour, startMinute, endHour, endMinute) {
+  const now = new Date();
+  const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+  const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
+
+  return now >= startTime && now <= endTime;
+}
+
+function isWithinCustomizedTimeInterval() {
+  return isTimeWithinInterval(8, 15, 8, 30) ||
+  isTimeWithinInterval(9, 25, 9, 40) ||
+  isTimeWithinInterval(10, 35, 10, 50) ||
+  isTimeWithinInterval(12, 25, 12, 40) ||
+  isTimeWithinInterval(13, 35, 13, 50) ||
+  isTimeWithinInterval(14, 45, 15, 0)
+}
+
+function storeTriggeredPeriodToIndexedDB(period) {
+  const request = indexedDB.open('uniNotify', 2);
+
+  request.onsuccess = function(event) {
+    const db = event.target.result;
+
+    const transaction = db.transaction(['triggeredPeriods'], 'readwrite');
+    const objectStore = transaction.objectStore('triggeredPeriods');
+
+    objectStore.add({ id: period });
+  };
+
+  request.onerror = function(event) {
+    console.error('Error opening database:', event.target.error);
+  };
+}
+//#endregion

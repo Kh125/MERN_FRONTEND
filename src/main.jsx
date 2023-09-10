@@ -16,7 +16,6 @@ if ('serviceWorker' in navigator) {
     .catch((err) => console.log("Service Worker not registered.", err));
 }
 
-
 function requestNotificationPermission(registration) {
   if ('Notification' in window) {
     Notification.requestPermission().then(function (permission) {

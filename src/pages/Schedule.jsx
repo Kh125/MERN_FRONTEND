@@ -10,7 +10,6 @@ import WeekSchedule from "../components/WeekSchedule";
 
 const Schedule = () => {
   const schedules = useSchedule();
-
   const user = useAuth();
 
   // Schedule Detail
@@ -60,28 +59,30 @@ const Schedule = () => {
                     {isWeekend ? "No Classes for Today" : "Today Classes"}
                   </h1>
                 </div>
-                <div className="flex space-x-6 justify-center mb-4">
-                  <button
-                    onClick={() => setWeekTab(false)}
-                    className={`${
-                      isWeekTab
-                        ? "bg-white text-custom-dark"
-                        : "bg-custom-dark text-white"
-                    }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
-                  >
+                {!isWeekend && (
+                  <div className="flex space-x-6 justify-center mb-4">
+                    <button
+                      onClick={() => setWeekTab(false)}
+                      className={`${
+                        isWeekTab
+                          ? "bg-white text-custom-dark"
+                          : "bg-custom-dark text-white"
+                      }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
+                    >
                     Today
-                  </button>
-                  <button
-                    onClick={() => setWeekTab(true)}
-                    className={`${
-                      isWeekTab
-                        ? "bg-custom-dark text-white"
-                        : "bg-white text-custom-dark"
-                    }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
-                  >
+                    </button>
+                    <button
+                      onClick={() => setWeekTab(true)}
+                      className={`${
+                        isWeekTab
+                          ? "bg-custom-dark text-white"
+                          : "bg-white text-custom-dark"
+                      }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
+                    >
                     All
-                  </button>
+                    </button>
                 </div>
+                )}
               </>
             )}
 
