@@ -7,21 +7,34 @@ import {
 } from "@react-google-maps/api";
 import CurrentLocation from "../components/CurrentLocation";
 import { style } from "../utils/mapStyle";
+import { useParams } from "react-router-dom";
+import { getPeriodData } from "../utils/indexDB";
+import PeriodInfo from "../components/PeriodInfo";
 
 const LocationRoute = () => {
+  const { id } = useParams();
   const [location, setLocation] = useState({});
   const [directionResponse, setDirectionRespone] = useState(null);
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
+  const [notifiedPeriod, setNotifiedPeriods] = useState(null);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API_KEY,
   });
+
   const university = {
     lat: 16.8559,
     lng: 96.1353,
   };
-
+  const getNotifiedPeriods = async () => {
+    const periods = await getPeriodData();
+    setNotifiedPeriods(periods.filter((p) => p.id == id));
+  };
+  useEffect(() => {
+    getNotifiedPeriods();
+  }, []);
+  console.log({ notifiedPeriod });
   const calculateRoute = async () => {
     const directionService = new google.maps.DirectionsService();
     const result = await directionService.route({
@@ -44,18 +57,15 @@ const LocationRoute = () => {
   useEffect(() => {
     if (isLoaded) calculateRoute();
   }, [isLoaded]);
+  console.log({ location });
   return (
     <>
-      <div className="max-w-md mx-auto font-mono bg-custom-light-blue h-screen overflow-hidden">
-        <div className="w-full pt-10 px-4 my-2 font-mono">
-          <p className="text-3xl font-semibold space-x-5"> Geolocation</p>
-        </div>
-
+      <div className="max-w-md mx-auto font-mono bg-blue-100 h-screen overflow-hidden">
         {isLoaded && (
           <div className="w-full h-full p-1 border rounded shadow-md">
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "40%" }}
-              center={location}
+              center={university}
               zoom={20}
               options={{
                 disableDefaultUI: true, // disable default map UI
@@ -72,14 +82,14 @@ const LocationRoute = () => {
             </GoogleMap>
             <CurrentLocation location={location} />
             <div className="flex w-full  items-center justify-around  rounded-lg">
-              <div className=" w-1/2 m-2 flex flex-col justify-between items-center bg-cyan-200 py-2 rounded-xl">
-                <p className="text font-semibold text-cyan-600">Distance </p>
-                <p className="text-lg font-semibold text-cyan-700 pt-2">
+              <div className=" w-1/2 m-2 flex flex-col justify-between items-center bg-white py-2 rounded-md">
+                <p className="text font-semibold text-blue-600">Distance </p>
+                <p className="text-lg font-semibold text-blue-700 pt-2">
                   {distance}
                 </p>
               </div>
-              <div className="w-1/2 m-2 flex flex-col justify-between items-center bg-stone-200 py-2 rounded-xl">
-                <p className="text font-semibold text-stone-600 inline-flex">
+              <div className="w-1/2 m-2 flex flex-col justify-between items-center bg-white py-2 rounded-md">
+                <p className="text font-semibold text-blue-600 inline-flex">
                   ETA
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -96,11 +106,12 @@ const LocationRoute = () => {
                     />
                   </svg>
                 </p>
-                <p className="text-lg font-semibold text-stone-700 pt-2">
+                <p className="text-lg font-semibold text-blue-700 pt-2">
                   {duration}
                 </p>
               </div>
             </div>
+            {notifiedPeriod && <PeriodInfo period={notifiedPeriod[0]} />}
           </div>
         )}
       </div>

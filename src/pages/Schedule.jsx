@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const Schedule = () => {
   const user = useAuth();
-  const userInfo = useUserInfo()
+  const userInfo = useUserInfo();
   const schedules = useSchedule();
 
   // Schedule Detail
@@ -28,7 +28,7 @@ const Schedule = () => {
   const date = new Date();
   const isWeekend = date.getDay() === 0 || date.getDay() === 6;
   const options = {
-    width: "140px",
+    width: "100px",
     baseColor: "#282D35",
     centerColor: "#2F69FC",
     centerBorderColor: "#ffffff",
@@ -44,11 +44,13 @@ const Schedule = () => {
   return (
     <>
       {user ? (
-        <div className="max-w-md mx-auto font-mono bg-custom-light-blue h-screen overflow-hidden">
-          <div className="bg-custom-light-blue py-4">
+        <div className="max-w-md mx-auto font-mono bg-blue-500 h-screen overflow-hidden">
+          <div className="bg-blue-700 py-4">
             {/* Title Section */}
             <div className="px-4 my-5">
-              <h1 className="text-custom-size-30 font-bold">Uni-Notify</h1>
+              <h1 className="text-custom-size-30 font-bold text-white">
+                Notify U
+              </h1>
             </div>
             <div className="pl-52 px-4 mb-6">
               <AnalogClock {...options} />
@@ -69,22 +71,22 @@ const Schedule = () => {
                       className={`${
                         isWeekTab
                           ? "bg-white text-custom-dark"
-                          : "bg-custom-dark text-white"
+                          : "bg-blue-500 text-white"
                       }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
                     >
-                    Today
+                      Today
                     </button>
                     <button
                       onClick={() => setWeekTab(true)}
                       className={`${
                         isWeekTab
-                          ? "bg-custom-dark text-white"
+                          ? "bg-blue-500 text-white"
                           : "bg-white text-custom-dark"
                       }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
                     >
-                    All
+                      All
                     </button>
-                </div>
+                  </div>
                 )}
               </>
             )}
@@ -97,9 +99,14 @@ const Schedule = () => {
             ) : (
               <>
                 {!isWeekend && !showDetailPage ? (
-                  <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
+                  <div className="bg-white pt-4 rounded-t-custom-t h-screen">
+                    <p className="px-8 py-4 text-black text-2xl font-bold">
+                      Today Classes
+                    </p>
                     <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
-                      {schedules && schedules[0] && schedules[0].Schedule &&
+                      {schedules &&
+                        schedules[0] &&
+                        schedules[0].Schedule &&
                         schedules[0].Schedule[currentDay].map((s) => (
                           <div
                             key={s._id}

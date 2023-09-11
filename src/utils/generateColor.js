@@ -1,12 +1,12 @@
 const colors = [
-  "bg-amber-500",
-  "bg-red-500",
-  "bg-lime-500",
-  "bg-emerald-500",
-  "bg-sky-500",
-  "bg-blue-500",
-  "bg-purple-500",
-  "bg-rose-500",
+  "bg-amber-50",
+  "bg-red-50",
+  "bg-lime-50",
+  "bg-teal-50",
+  "bg-sky-50",
+  "bg-blue-50",
+  "bg-purple-50",
+  "bg-rose-50",
 ];
 
 export const color = () => colors[Math.floor(Math.random() * colors.length)];

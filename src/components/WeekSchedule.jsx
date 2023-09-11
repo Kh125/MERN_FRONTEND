@@ -5,12 +5,12 @@ const WeekSchedule = ({ schedule }) => {
   const [day, setDay] = useState("Monday");
 
   return (
-    <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
+    <div className="bg-white pt-4 rounded-t-custom-t h-screen">
       <div className="w-full flex items-center justify-center">
         <select
           onChange={(e) => setDay(e.target.value)}
           id="default"
-          className=" border  text-stone-200 mb-6 text rounded-lg    block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400text-white focus:ring-blue-500 focus:border-blue-500"
+          className=" border  text-white mb-6 text rounded-lg    block p-2.5 bg-blue-600 border-blue-500 placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
         >
           <option selected value="Monday">
             Monday

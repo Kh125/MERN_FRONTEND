@@ -22,7 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/info-setup" element={<UserInfoSetup />} />
-          <Route path="/location" element={<LocationRoute />} />
+          <Route path="/location/:id" element={<LocationRoute />} />
         </Routes>
         <NavBar />
       </Router>
