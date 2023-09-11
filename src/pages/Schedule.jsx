@@ -7,10 +7,13 @@ import ScheduleDetail from "../components/ScheduleDetail";
 import { useSchedule } from "../hooks/schedule";
 import Relax from "../components/Relax";
 import WeekSchedule from "../components/WeekSchedule";
+import { useUserInfo } from "../hooks/userInfo";
+import { useNavigate } from "react-router-dom";
 
 const Schedule = () => {
-  const schedules = useSchedule();
   const user = useAuth();
+  const userInfo = useUserInfo()
+  const schedules = useSchedule();
 
   // Schedule Detail
   const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -96,7 +99,7 @@ const Schedule = () => {
                 {!isWeekend && !showDetailPage ? (
                   <div className="bg-custom-blue pt-4 rounded-t-custom-t h-screen">
                     <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
-                      {schedules &&
+                      {schedules && schedules[0] && schedules[0].Schedule &&
                         schedules[0].Schedule[currentDay].map((s) => (
                           <div
                             key={s._id}

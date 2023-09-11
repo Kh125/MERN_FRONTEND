@@ -1,9 +1,11 @@
 import React from "react";
 import { useAuth } from "../hooks/auth";
 import RedirectComponent from "../components/Redirect";
+import { useUserInfo } from "../hooks/userInfo";
 
 const Notification = () => {
   const user = useAuth();
+  const userInfo = useUserInfo()
 
   return (
     <>

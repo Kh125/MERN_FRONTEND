@@ -1,33 +1,59 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState()
+  const navigate = useNavigate();
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    axios
+      .post("/api/routes/register", {
+        username,
+        email,
+        password,
+      })
+      .then(() => {
+        setTimeout(() => navigate("/login"), 1000);
+      })
+      .catch((errors) => {
+        setErrors(errors)
+        console.log(errors);
+      })
+  };
+
   return (
     <>
-      <div class="transition-all flex justify-center items-center h-screen font-mono">
-        <div>
-          <h1 class="mb-8 font-bold text-4xl">Register</h1>
-          <form>
-            <div>
-              <label class="block font-semibold" for="name">
+      <div className="flex flex-col justify-center items-start h-screen">
+          <div className="px-4 mb-8">
+              <p className="text-5xl font-extrabold uppercase">Signup</p>
+          </div>
+          <form onSubmit={onSubmit} className="w-full flex flex-col justify-center items-center px-4 font-mono">
+          <div className="mt-4 w-full">
+              <label className="block font-semibold text-xl" htmlFor="username">
                 Username
               </label>
               <input
-                class="shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full"
-                id="name"
+                onChange={(e) => setUsername(e.target.value)}
+                className="shadow-inner bg-gray-100 rounded-lg placeholder-black text-lg p-4 border-none block mt-1 w-full"
+                id="username"
                 type="text"
-                name="name"
+                name="username"
                 required="required"
-                autofocus="autofocus"
               ></input>
             </div>
 
-            <div class="mt-4">
-              <label class="block font-semibold" for="email">
+            <div className="mt-6 w-full">
+              <label className="block font-semibold text-xl" htmlFor="email">
                 Email
               </label>
               <input
-                class="shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full"
+                onChange={(e) => setEmail(e.target.value)}
+                className="shadow-inner bg-gray-100 rounded-lg placeholder-black text-lg p-4 border-none block mt-1 w-full"
                 id="email"
                 type="email"
                 name="email"
@@ -35,33 +61,34 @@ const Signup = () => {
               ></input>
             </div>
 
-            <div class="mt-4">
-              <label class="block font-semibold" for="password">
+            <div className="mt-6 w-full">
+              <label className="block font-semibold text-xl" htmlFor="password">
                 Password
               </label>
               <input
-                class="shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full"
+                onChange={(e) => setPassword(e.target.value)}
+                className="shadow-inner bg-gray-100 rounded-lg placeholder-black text-lg p-4 border-no w-full"
                 id="password"
                 type="password"
                 name="password"
                 required="required"
-                autocomplete="new-password"
+                autoComplete="new-password"
               ></input>
             </div>
 
-            <div class="flex items-center justify-between mt-8">
+
+            <div className="mt-6 w-full flex items-center justify-between">
               <button
                 type="submit"
-                class="flex items-center font-semibold justify-center px-3 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-dark md:py-4 md:text-lg md:px-10"
+                className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-dark hover:bg-dark md:py-4 md:text-lg md:px-10"
               >
-                Register
+                Sign Up
               </button>
-              <Link to="/login" class="font-semibold">
+              <Link to="/login" className="font-semibold underline">
                 Already registered?
               </Link>
             </div>
           </form>
-        </div>
       </div>
     </>
   );
