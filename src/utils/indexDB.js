@@ -27,3 +27,33 @@ export const storeDataInIndexedDB = (data) => {
         console.error('Error opening database:', event.target.error);
     };
 }
+
+export const clearObjectStore = (dbName, storeName) => {
+    return new Promise((resolve, reject) => {
+      const request = window.indexedDB.open(dbName);
+  
+      request.onerror = (event) => {
+        reject(`Error opening database: ${event.target.error}`);
+      };
+  
+      request.onsuccess = (event) => {
+        const db = event.target.result;
+        const transaction = db.transaction(storeName, 'readwrite');
+        const objectStore = transaction.objectStore(storeName);
+  
+        objectStore.openCursor().onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (cursor) {
+            cursor.delete();
+            cursor.continue();
+          } else {
+            resolve('Object store cleared');
+          }
+        };
+  
+        transaction.oncomplete = () => {
+          db.close();
+        };
+      };
+    });
+}

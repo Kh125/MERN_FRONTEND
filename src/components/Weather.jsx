@@ -90,7 +90,7 @@ const Weather = () => {
                         setTimeout(() => {
                             setRotationDegree(0);
                             setSkeletonLoading(false);
-                        }, 2500);
+                        }, 500);
                     }
                 },
                 (error) => {

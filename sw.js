@@ -102,7 +102,7 @@ setInterval(() => {
         if (period && !isMatched(period.Period, triggeredPeriods)) {
               const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
               showNotification('Upcoming Class', alertMessage);
-              storeTriggeredPeriodToIndexedDB(period.Period)
+              storeTriggeredPeriodToIndexedDB(period)
         } else if (!period) {
           showNotification('No classes');
         }
@@ -257,7 +257,17 @@ function storeTriggeredPeriodToIndexedDB(period) {
     const transaction = db.transaction(['triggeredPeriods'], 'readwrite');
     const objectStore = transaction.objectStore('triggeredPeriods');
 
-    objectStore.add({ id: period });
+    objectStore.add({ 
+      id: period.Period,
+      lecture: period.Lecture,
+      location: period.Location,
+      subject: period.Subject,
+      subjectId: period.SubjectID,
+      teacher: period.Teacher,
+      teacherPhNo: period.TeacherPhNo,
+      from: period.from,
+      to: period.to
+    });
   };
 
   request.onerror = function(event) {

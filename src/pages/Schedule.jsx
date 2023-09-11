@@ -50,18 +50,18 @@ const Schedule = () => {
             <div className="px-4 my-5">
               <h1 className="text-custom-size-30 font-bold">Uni-Notify</h1>
             </div>
-            <div className="pl-52 px-4">
+            <div className="pl-52 px-4 mb-6">
               <AnalogClock {...options} />
             </div>
 
             {!showDetailPage && (
               <>
                 {" "}
-                <div className="px-4 my-4">
+                {/* <div className="px-4 my-4">
                   <h1 className="text-2xl font-semibold text-custom-class-title">
                     {isWeekend ? "No Classes for Today" : "Today Classes"}
                   </h1>
-                </div>
+                </div> */}
                 {!isWeekend && (
                   <div className="flex space-x-6 justify-center mb-4">
                     <button
