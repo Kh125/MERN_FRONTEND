@@ -9,12 +9,18 @@ const fetchCurrentUser = ({ onSet }) => {
         console.log(response);
         if (response.statusText == "OK") {
           localStorage.setItem("user", JSON.stringify(response.data));
+          const scheduleRes = await axios.get("/api/routes/getSchedules")
+          if (scheduleRes.status == 200) {
+            const scheduleData = scheduleRes.data[0]
+            // storeDataInIndexedDB(scheduleData.Schedule)
+          }
         }
       } catch (e) {
         console.log(e);
       }
     } else {
       localStorage.clear();
+      // deleteIndexedDBDatabase("uniNotify")
     }
   });
 };

@@ -22,20 +22,20 @@ const Login = () => {
         setTimeout(() => navigate("/"), 1000);
       });
   };
-  console.log(isAuth);
   return (
     <>
-      <div class="flex justify-center items-center h-screen font-mono">
-        <div class="py-6 rounded-lg">
-          <h1 class="text-left mb-8 font-bold text-4xl">Login</h1>
-          <form onSubmit={onSubmit}>
-            <div class="mt-4">
-              <label class="block font-semibold" for="email">
+      <div className="flex flex-col justify-center items-start h-screen text-blue-500">
+          <div className="px-4 mb-8">
+              <p className="text-5xl font-extrabold uppercase">Login</p>
+          </div>
+          <form onSubmit={onSubmit} className="w-full flex flex-col justify-center items-center px-4 font-mono">
+            <div className="mt-6 w-full">
+              <label className="block font-semibold text-xl" htmlFor="email">
                 Email
               </label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
-                class="w-full shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1"
+                className="shadow-inner bg-gray-100 rounded-lg placeholder-blue-500 text-lg p-4 border-none block mt-1 w-full"
                 id="email"
                 type="email"
                 name="email"
@@ -43,34 +43,34 @@ const Login = () => {
               ></input>
             </div>
 
-            <div class="mt-4">
-              <label class="block font-semibold" for="password">
+            <div className="mt-6 w-full">
+              <label className="block font-semibold text-xl" htmlFor="password">
                 Password
               </label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
-                class="shadow-inner bg-gray-100 rounded-lg placeholder-black text-2xl p-4 border-none block mt-1 w-full"
+                className="shadow-inner bg-gray-100 rounded-lg placeholder-blue-500 text-lg p-4 border-no w-full"
                 id="password"
                 type="password"
                 name="password"
                 required="required"
-                autocomplete="new-password"
+                autoComplete="new-password"
               ></input>
             </div>
 
-            <div class="flex items-center justify-between mt-8">
+
+            <div className="mt-6 w-full flex items-center justify-between">
               <button
                 type="submit"
-                class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-dark hover:bg-dark md:py-4 md:text-lg md:px-10"
+                className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-500 hover:bg-dark md:py-4 md:text-lg md:px-10"
               >
-                Login
+                Log In
               </button>
-              <Link to="/signup" class="font-semibold underline">
+              <Link to="/signup" className="font-semibold underline">
                 Haven't registered?
               </Link>
             </div>
           </form>
-        </div>
       </div>
     </>
   );

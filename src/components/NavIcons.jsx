@@ -15,7 +15,7 @@ const NavIcons = ({ path, svg, text, aSvg }) => {
       <Link
         to={path}
         type="button"
-        className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group transition-all ease-in"
+        className="rounded-full inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group transition-all ease-in"
       >
         {active ? aSvg : svg}
       </Link>

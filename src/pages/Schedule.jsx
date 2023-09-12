@@ -8,7 +8,6 @@ import { useSchedule } from "../hooks/schedule";
 import Relax from "../components/Relax";
 import WeekSchedule from "../components/WeekSchedule";
 import { useUserInfo } from "../hooks/userInfo";
-import { useNavigate } from "react-router-dom";
 
 const Schedule = () => {
   const user = useAuth();
@@ -45,7 +44,7 @@ const Schedule = () => {
     <>
       {user ? (
         <div className="max-w-md mx-auto font-mono bg-blue-500 h-screen overflow-hidden">
-          <div className="bg-blue-700 py-4">
+          <div className="bg-blue-500 py-4">
             {/* Title Section */}
             <div className="px-4 my-5">
               <h1 className="text-custom-size-30 font-bold text-white">
@@ -70,9 +69,9 @@ const Schedule = () => {
                       onClick={() => setWeekTab(false)}
                       className={`${
                         isWeekTab
-                          ? "bg-white text-custom-dark"
-                          : "bg-blue-500 text-white"
-                      }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
+                          ? "bg-blue-700 text-white"
+                          : "bg-white text-custom-dark"
+                      }  py-2 px-4 rounded-full w-28 h-12 font-semibold shadow-md`}
                     >
                       Today
                     </button>
@@ -80,9 +79,9 @@ const Schedule = () => {
                       onClick={() => setWeekTab(true)}
                       className={`${
                         isWeekTab
-                          ? "bg-blue-500 text-white"
-                          : "bg-white text-custom-dark"
-                      }  py-2 px-4 rounded-full w-28 h-12 font-semibold`}
+                          ? "bg-white text-custom-dark"
+                          : "bg-blue-700 text-white"
+                      }  py-2 px-4 rounded-full w-28 h-12 font-semibold shadow-md`}
                     >
                       All
                     </button>
@@ -90,7 +89,6 @@ const Schedule = () => {
                 )}
               </>
             )}
-
             {/* Title Section */}
 
             {/* Today Class section */}
@@ -99,11 +97,11 @@ const Schedule = () => {
             ) : (
               <>
                 {!isWeekend && !showDetailPage ? (
-                  <div className="bg-white pt-4 rounded-t-custom-t h-screen">
+                  <div className="bg-white pt-4 pb-10 rounded-t-custom-t h-screen shadow-lg">
                     <p className="px-8 py-4 text-black text-2xl font-bold">
                       Today Classes
                     </p>
-                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
+                    <div className="overflow-y-scroll max-h-[500px] pt-2">
                       {schedules &&
                         schedules[0] &&
                         schedules[0].Schedule &&
@@ -138,27 +136,6 @@ const Schedule = () => {
       )}
     </>
   );
-};
-
-const getCurrentTime12HourFormat = () => {
-  const currentTime = new Date();
-  let hours = currentTime.getHours();
-  let minutes = currentTime.getMinutes();
-  const amPm = hours >= 12 ? "PM" : "AM";
-
-  // Convert to 12-hour format
-  if (hours > 12) {
-    hours -= 12;
-  } else if (hours === 0) {
-    hours = 12;
-  }
-
-  // Add leading zeros to minutes if needed
-  if (minutes < 10) {
-    minutes = `0${minutes}`;
-  }
-
-  return [`${hours}:${minutes}`, amPm];
 };
 
 export default Schedule;

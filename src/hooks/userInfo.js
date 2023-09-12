@@ -9,7 +9,7 @@ export const useUserInfo = () => {
         const getUserInfo = () => {
             const storedUser = localStorage.getItem("user");
             if (storedUser) {
-            setUserInfo(JSON.parse(storedUser));
+                setUserInfo(JSON.parse(storedUser));
             }
         };
 

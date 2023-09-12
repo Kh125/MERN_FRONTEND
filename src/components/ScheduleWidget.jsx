@@ -8,7 +8,7 @@ const ScheduleWidget = ({ schedule }) => {
         <div
           className={`${c} shadow-md mx-2 mb-2 px-4 py-2  rounded-xl cursor-pointer`}
         >
-          <div className="flex flex-col items-center justify-between">
+          <div className="flex flex-col items-start justify-between">
             <div className="flex items-center">
               <div className="flex-col space-y-2 mx-3">
                 <div className="flex w-full text-stone-400 ">

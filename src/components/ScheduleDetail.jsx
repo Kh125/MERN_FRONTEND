@@ -5,7 +5,7 @@ const ScheduleDetail = (props) => {
   const phoneRedirectLink = `tel:${schedule.TeacherPhNo}`;
 
   return (
-    <div className="max-w-md mx-auto fixed inset-x-0 bottom-0 flex items-center justify-center bg-custom-widget-color text-custom-time rounded-t-custom-t">
+    <div className="max-w-md mx-auto fixed inset-x-0 bottom-0 flex items-center justify-center bg-white text-blue-500 rounded-t-custom-t">
       <div className="max-w-md mx-auto p-4 w-screen h-[580px] rounded-t-custom-t">
         <div className="text-right px-5">
           <div
@@ -16,14 +16,14 @@ const ScheduleDetail = (props) => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="bg-custom-blue rounded-full w-32 py-2 mb-6 text-center text-white text-xl font-semibold">
+          <div className="bg-blue-500 rounded-full w-32 py-2 mb-6 text-center text-white text-xl font-semibold">
             {schedule.Lecture ? 'Lecture' : 'TDA'}
           </div>
           <h1 className="text-2xl font-bold text-center">{schedule.Subject}</h1>
         </div>
         <div id="schedule-detail-info" className="mt-16 w-full">
           {/* Time */}
-          <div className="flex items-center justify-center bg-custom-light-blue rounded-xl mb-2 px-3 py-4 w-full">
+          <div className="flex items-center justify-center bg-blue-100 rounded-xl mb-2 px-3 py-4 w-full">
             <div className="w-14 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@ const ScheduleDetail = (props) => {
           </div>
 
           {/* Person */}
-          <div className="flex items-center justify-center bg-custom-light-blue rounded-xl mb-2 px-3 py-4 w-full">
+          <div className="flex items-center justify-center bg-blue-100 rounded-xl mb-2 px-3 py-4 w-full">
             <div className="w-14 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,14 +70,14 @@ const ScheduleDetail = (props) => {
             <div>
               <a
                 href={phoneRedirectLink}
-                className="w-16 h-8 flex items-center justify-center border-orange-400 border-2 rounded-3xl font-bold"
+                className="w-20 h-10 flex items-center justify-center bg-blue-500 text-white border-white border-2 rounded-3xl font-bold"
               >
                 Call
               </a>
             </div>
           </div>
 
-          <div className="flex items-center justify-center bg-custom-light-blue rounded-xl mb-2 px-3 py-4 w-full">
+          <div className="flex items-center justify-center bg-blue-100 rounded-xl mb-2 px-3 py-4 w-full">
             <div className="w-14 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

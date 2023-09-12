@@ -1,7 +1,7 @@
 import axios from "axios";
 import { atom, useRecoilState } from "recoil";
-
 import { useEffect } from "react";
+
 const schedulesState = atom({
   key: "schedulesState",
   default: null,

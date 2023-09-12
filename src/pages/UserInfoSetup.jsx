@@ -41,7 +41,7 @@ const UserInfoSetup = () => {
 
     return (
         <>
-            <div class="flex flex-col justify-center items-start h-screen">
+            <div class="flex flex-col justify-center items-start h-screen text-blue-500">
                 <div className="px-4 mb-8">
                     <p className="text-5xl font-extrabold uppercase">Setup your profile</p>
                 </div>
@@ -52,7 +52,7 @@ const UserInfoSetup = () => {
                         </label>
                         <input
                             onChange={(e) => setRoll(e.target.value)}
-                            class="shadow-inner bg-gray-100 rounded-lg placeholder-black text-lg p-4 border-none block mt-1 w-full"
+                            className="shadow-inner bg-gray-100 rounded-lg placeholder-blue-500 text-lg p-4 border-none block mt-1 w-full"
                             id="roll"
                             type="text"
                             name="roll"
@@ -105,7 +105,7 @@ const UserInfoSetup = () => {
                     <div class="mt-6 w-full">
                         <button
                         type="submit"
-                        class="flex items-start justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-dark hover:bg-dark md:py-4 md:text-lg md:px-10"
+                        class="flex items-start justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-500 hover:bg-dark md:py-4 md:text-lg md:px-10"
                         >
                         Submit
                         </button>

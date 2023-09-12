@@ -28,7 +28,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-start h-screen">
+      <div className="flex flex-col justify-center items-start h-screen text-blue-500">
           <div className="px-4 mb-8">
               <p className="text-5xl font-extrabold uppercase">Signup</p>
           </div>
@@ -80,7 +80,7 @@ const Signup = () => {
             <div className="mt-6 w-full flex items-center justify-between">
               <button
                 type="submit"
-                className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-dark hover:bg-dark md:py-4 md:text-lg md:px-10"
+                className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-500 hover:bg-dark md:py-4 md:text-lg md:px-10"
               >
                 Sign Up
               </button>

@@ -9,6 +9,7 @@ const Notification = () => {
   const user = useAuth();
   const userInfo = useUserInfo();
   const [notifiedPeriods, setNotifiedPeriods] = useState(null);
+  
   const getNotifiedPeriods = async () => {
     const periods = await getPeriodData();
     setNotifiedPeriods(periods);
@@ -20,9 +21,9 @@ const Notification = () => {
   return (
     <>
       {user ? (
-        <div className="max-w-md mx-auto font-sans bg-blue-100 h-screen px-2 overflow-hidden">
+        <div className="max-w-md mx-auto font-sans bg-blue-500 h-screen px-2 overflow-hidden">
           <div className="w-full pt-20 px-4 my-10 font-mono">
-            <p className="text-3xl font-semibold space-x-5 text-blue-500">
+            <p className="text-3xl font-semibold space-x-5 text-white">
               {" "}
               Notifications
             </p>

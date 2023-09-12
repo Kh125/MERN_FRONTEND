@@ -5,7 +5,7 @@ const RedirectComponent = () => {
   return (
     <>
       <div className="flex justify-center items-center h-screen">
-        <div className="flex flex-col justify-center items-center mx-4 px-10 py-6 bg-custom-light-blue rounded-lg">
+        <div className="flex flex-col justify-center items-center mx-4 px-10 py-6 bg-blue-400 rounded-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -29,7 +29,7 @@ const RedirectComponent = () => {
               <Link
                 to="/login"
                 type="submit"
-                className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-dark hover:bg-dark md:py-4 md:text-lg md:px-10"
+                className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-dark md:py-4 md:text-lg md:px-10"
               >
                 Login
               </Link>

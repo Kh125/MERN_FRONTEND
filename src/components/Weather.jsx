@@ -114,7 +114,7 @@ const Weather = () => {
   }, [fetchWeather]);
 
   return (
-    <div className="max-w-md mx-auto font-sans bg-blue-100 h-screen p-2">
+    <div className="max-w-md mx-auto font-sans bg-blue-500 h-screen p-2">
       <div className="max-w-md mx-auto  font-mono [word-spacing:-5px]">
         {/* Current Weather */}
         <div className="px-6 py-5 mb-2 bg-white rounded-2xl text-blue-500 shadow-md">

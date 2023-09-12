@@ -1,3 +1,4 @@
+import { useAuth } from "../hooks/auth";
 import { useSchedule } from "../hooks/schedule";
 import { storeDataInIndexedDB } from "../utils/indexDB";
 import {
@@ -7,7 +8,8 @@ import {
 } from "../utils/time";
 import Relax from "./Relax";
 
-const UpcomingClass = (props) => {
+const UpcomingClass = () => {
+  const user = useAuth()
   const schedules = useSchedule();
   const currentDateTime = new Date();
   const currentDay = currentDateTime.toLocaleDateString("en-US", {
@@ -17,34 +19,36 @@ const UpcomingClass = (props) => {
   let nearestClass = null;
   
   // Find the nearest or equal "from" time
-  if (
-    schedules &&
-    schedules[0] &&
-    schedules[0].Schedule &&
-    schedules[0].Schedule[currentDay]
-  ) {
-    storeDataInIndexedDB(schedules[0].Schedule)
-    // Find the nearest or equal "from" time
-    nearestClass = findNearestOrEqualTime(
-      schedules[0].Schedule[currentDay],
-      currentDateTime
-    );
-  }
-
-  // Display the result
-  if (nearestClass && nearestClass[0]) {
-    // console.log(`Total ${nearestClass[1]} classes remaining.`);
-
-    remainingTime = calculateRemainingTimeInMinute(
-      nearestClass[0].from,
-      currentDateTime
-    );
-
-    // console.log(
-    //   `Nearest or equal class: ${nearestClass[0].Subject} at ${nearestClass[0].from}`
-    // );
-  } else {
-    console.log("No classes found for today.");
+  if(user) {
+    if (
+      schedules &&
+      schedules[0] &&
+      schedules[0].Schedule &&
+      schedules[0].Schedule[currentDay]
+    ) {
+      storeDataInIndexedDB(schedules[0].Schedule)
+      // Find the nearest or equal "from" time
+      nearestClass = findNearestOrEqualTime(
+        schedules[0].Schedule[currentDay],
+        currentDateTime
+      );
+    }
+  
+    // Display the result
+    if (nearestClass && nearestClass[0]) {
+      // console.log(`Total ${nearestClass[1]} classes remaining.`);
+  
+      remainingTime = calculateRemainingTimeInMinute(
+        nearestClass[0].from,
+        currentDateTime
+      );
+  
+      // console.log(
+      //   `Nearest or equal class: ${nearestClass[0].Subject} at ${nearestClass[0].from}`
+      // );
+    } else {
+      console.log("No classes found for today.");
+    }
   }
 
   return (
