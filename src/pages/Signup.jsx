@@ -21,7 +21,7 @@ const Signup = () => {
         setTimeout(() => navigate("/login"), 1000);
       })
       .catch((errors) => {
-        setErrors(errors)
+        setErrors(errors.response.data.error)
         console.log(errors);
       })
   };
@@ -87,6 +87,9 @@ const Signup = () => {
               <Link to="/login" className="font-semibold underline">
                 Already registered?
               </Link>
+            </div>
+            <div>
+              <p className="text-red-400">{errors}</p>
             </div>
           </form>
       </div>

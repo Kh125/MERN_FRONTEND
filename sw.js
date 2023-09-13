@@ -256,6 +256,8 @@ function storeTriggeredPeriodToIndexedDB(period) {
 
     const transaction = db.transaction(['triggeredPeriods'], 'readwrite');
     const objectStore = transaction.objectStore('triggeredPeriods');
+    // current timestamp
+    const timestamp = new Date().getTime();
 
     objectStore.add({ 
       id: period.Period,
@@ -266,7 +268,8 @@ function storeTriggeredPeriodToIndexedDB(period) {
       teacher: period.Teacher,
       teacherPhNo: period.TeacherPhNo,
       from: period.from,
-      to: period.to
+      to: period.to,
+      timestamp
     });
   };
 

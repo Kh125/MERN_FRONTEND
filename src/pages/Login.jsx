@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
@@ -9,6 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError]= useState("")
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +22,9 @@ const Login = () => {
       .then(() => {
         setIsAuth(true);
         setTimeout(() => navigate("/"), 1000);
+      }).catch((e)=>{
+        setError(e.response.data.error)
+        console.log(e.response)
       });
   };
   return (
@@ -70,6 +75,9 @@ const Login = () => {
                 Haven't registered?
               </Link>
             </div>
+           <div>
+           <p className="text-red-400 font-semibold">{error}</p> 
+           </div>
           </form>
       </div>
     </>

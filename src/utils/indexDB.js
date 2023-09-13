@@ -6,7 +6,8 @@ export const storeDataInIndexedDB = (data) => {
 
     // Create object stores if they don't exist
     if (!db.objectStoreNames.contains("triggeredPeriods")) {
-      db.createObjectStore("triggeredPeriods", { keyPath: "id" });
+      const tpObjectStore = db.createObjectStore("triggeredPeriods", { keyPath: "id" });
+      tpObjectStore.createIndex('timestamp', 'timestamp', { unique: false });
     }
 
     if (!db.objectStoreNames.contains("schedule")) {

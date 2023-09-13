@@ -65,7 +65,7 @@ const LocationRoute = () => {
           <div className="w-full h-full p-1 border rounded shadow-md">
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "40%" }}
-              center={university}
+              center={location}
               zoom={20}
               options={{
                 disableDefaultUI: true, // disable default map UI

@@ -57,7 +57,7 @@ const UpcomingClass = () => {
         <div
           className={
             nearestClass[0]
-              ? " text-custom-time py-4 rounded-t-custom-t mb-16 font-mono"
+              ? " text-custom-time rounded-t-custom-t mt-4 mb-16 font-mono"
               : "bg-transparent"
           }
         >
@@ -66,7 +66,7 @@ const UpcomingClass = () => {
             <p className="font-bold">{nearestClass[1]} classes</p>
           </div>
           {nearestClass[0] && (
-            <div className="bg-custom-light-blue text-custom-upcoming-text mx-3 mt-3 rounded-2xl">
+            <div className="bg-white text-blue-500 mx-3 mt-3 rounded-2xl shadow-lg">
               {/* Time Display */}
               <div className="flex items-center justify-between px-4 py-2 mb-1">
                 <p className="text-custom-size-36 font-bold">

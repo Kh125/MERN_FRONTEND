@@ -9,8 +9,10 @@ const Home = () => {
 
   return (
     <>
-      <Weather />
-      {user && <UpcomingClass />}
+      <div className="bg-blue-500 min-h-screen pb-16">
+        <Weather />
+        {user && <UpcomingClass />}
+      </div>
     </>
   );
 };

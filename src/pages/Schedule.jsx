@@ -101,7 +101,7 @@ const Schedule = () => {
                     <p className="px-8 py-4 text-black text-2xl font-bold">
                       Today Classes
                     </p>
-                    <div className="overflow-y-scroll max-h-[500px] pt-2">
+                    <div className="overflow-y-scroll max-h-[400px] pt-2 pb-[4rem]">
                       {schedules &&
                         schedules[0] &&
                         schedules[0].Schedule &&
