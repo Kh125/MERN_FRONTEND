@@ -23,6 +23,11 @@ const ProfileSection = ({ user }) => {
     await axios.post("/api/routes/logout").then(() => {
       setIsAuth(false);
       setTimeout(() => {
+        navigator.serviceWorker.controller.postMessage({ action: 'logout' });
+
+        // Clear IndexDB
+        // indexedDB.deleteDatabase("uniNotify")
+
         navigate("/");
       }, 1000);
     });

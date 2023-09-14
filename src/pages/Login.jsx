@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { auth } from "../shared/auth.state";
 import { Link, useNavigate } from "react-router-dom";
+import { requestNotificationPermission } from "../utils/notificationHandler";
+import { storeDataInIndexedDB } from "../utils/indexDB";
 
 const Login = () => {
   const [isAuth, setIsAuth] = useRecoilState(auth);
@@ -20,6 +22,22 @@ const Login = () => {
       })
       .then(() => {
         setIsAuth(true);
+
+        // // Clear IndexDB
+        // indexedDB.deleteDatabase("uniNotify")
+
+        // axios.get("api/routes/getschedules", {
+        //   email, password
+        // })
+        // .then((res) => {
+        //   console.log(res.data[0]["Schedule"]);
+        //   storeDataInIndexedDB(res.data[0]["Schedule"])
+        // })
+
+        requestNotificationPermission()
+
+        navigator.serviceWorker.controller.postMessage({ action: 'login' });
+
         setTimeout(() => navigate("/"), 1000);
       })
       .catch((e) => {

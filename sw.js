@@ -3,7 +3,8 @@ const dynamic_cache_name = "dynamic_app_cache_v1"
 const public_key = 'BM8TS8LROkfyBsbGvSE8z7BjYZyNkgyxI_x7T6b22qDbKkWYK4Up9ljpYtA6n7kZzqsuQMuL2eRP6Bb0Oq0NYP4'
 var schedule_data = null
 // Set up the interval to call the periodic function
-const interval = 1 * 60 * 1000; // 1 minutes
+const interval = 0.25 * 60 * 1000; // 1 minutes
+let intervalId;
 
 const urls_to_cache = [
     '/',
@@ -57,10 +58,16 @@ self.addEventListener('fetch', (event) => {
   console.log("Fetch Event Activated.");
 });
 
-self.addEventListener('notificationclick', function (event) {
-  // Handle notification click event, e.g., open a specific page
-  event.notification.close();
-  // Add your custom logic here
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close(); // Close the notification
+
+  const customData = event.notification.data; // Access the custom data
+
+  const url = `http://localhost:5173/location/${customData.id}`;
+
+  event.waitUntil(
+    clients.openWindow(url)
+  );
 });
 
 self.addEventListener('message', (event) => {
@@ -82,37 +89,51 @@ self.addEventListener('message', (event) => {
         console.error('Failed to subscribe user:', error);
       });
   }
+
+  if (event.data && event.data.action === 'logout') {
+    console.log("Interval Cleared");
+    clearInterval(intervalId)
+  }
+
+  if (event.data && event.data.action === 'login') {
+    console.log("Interval Started");
+    startInterval()
+  }
 });
 
 // Periodic function with push notification
-function showNotification(title, message) {
+function showNotification(title, message, id) {
   // Send a push notification
   self.registration.showNotification(title, {
     body: message,
     icon: 'notification-icon.svg', // Path to the notification icon
+    data: {
+      id
+    }
   });
 }
 
-setInterval(() => {
-  retrieveCurrentDateDataFromIndexedDB()
-    .then(({ currentDayData, triggeredPeriods }) => {
-      if(isWithinCustomizedTimeInterval()) {
-        const period = retrieveComingPeriodData(currentDayData, 15);
-        
-        if (period && !isMatched(period.Period, triggeredPeriods)) {
-              const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
-              showNotification('Upcoming Class', alertMessage);
-              storeTriggeredPeriodToIndexedDB(period)
-        } else if (!period) {
-          showNotification('No classes');
+const startInterval = () => {
+  intervalId = setInterval(() => {
+    retrieveCurrentDateDataFromIndexedDB()
+      .then(({ currentDayData, triggeredPeriods }) => {
+        if(isWithinCustomizedTimeInterval()) {
+          const period = retrieveComingPeriodData(currentDayData, 15);
+          
+          if (period && !isMatched(period.Period, triggeredPeriods)) {
+                const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
+                showNotification('Upcoming Class', alertMessage, period.Period);
+                storeTriggeredPeriodToIndexedDB(period)
+          } else if (!period) {
+            showNotification('No classes');
+          }
         }
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}, interval);
-
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, interval);
+}
 
 const isMatched = (inputPeriod, triggeredPeriods) => {
   for (const period of triggeredPeriods) {
@@ -127,7 +148,7 @@ const isMatched = (inputPeriod, triggeredPeriods) => {
 //#region Private Methods
 const retrieveCurrentDateDataFromIndexedDB = () => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('uniNotify', 2);
+    const request = indexedDB.open('uniNotify');
 
     request.onupgradeneeded = function(event) {
       const db = event.target.result;
