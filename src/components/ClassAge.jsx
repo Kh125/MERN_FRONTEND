@@ -15,7 +15,7 @@ const ClassAge = ({ period }) => {
       )}
       {future && (
         <div className="w-full py-2 px-3 bg-blue-500 mt-2 text-white font-semibold rounded-md shadow-md">
-          <p>Class is about to start in {timeDifference.minutes} mins</p>
+          <p>Class is about to start in {period.from} </p>
         </div>
       )}
       {past && (

@@ -4,7 +4,7 @@ import RedirectComponent from "../components/Redirect";
 import { useUserInfo } from "../hooks/userInfo";
 import { getPeriodData } from "../utils/indexDB";
 import NotiWidget from "../components/NotiWidget";
-import logo from "../../public/logo.svg";
+import logo from "../assets/logo.svg";
 
 const Notification = () => {
   const user = useAuth();

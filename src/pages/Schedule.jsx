@@ -8,7 +8,7 @@ import { useSchedule } from "../hooks/schedule";
 import Relax from "../components/Relax";
 import WeekSchedule from "../components/WeekSchedule";
 import { useUserInfo } from "../hooks/userInfo";
-import logo from "../../public/logo.svg";
+import logo from "../assets/logo.svg";
 
 const Schedule = () => {
   const user = useAuth();

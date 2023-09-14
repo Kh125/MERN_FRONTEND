@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../hooks/auth";
 import RedirectComponent from "../components/Redirect";
 import ProfileSection from "../components/ProfileSection";
-import logo from "../../public/logo.svg";
+import logo from "../assets/logo.svg";
 
 const Profile = () => {
   const user = useAuth();
