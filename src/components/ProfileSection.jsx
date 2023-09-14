@@ -23,7 +23,7 @@ const ProfileSection = ({ user }) => {
     await axios.post("/api/routes/logout").then(() => {
       setIsAuth(false);
       setTimeout(() => {
-        navigator.serviceWorker.controller.postMessage({ action: 'logout' });
+        navigator.serviceWorker.controller.postMessage({ action: "logout" });
 
         // Clear IndexDB
         // indexedDB.deleteDatabase("uniNotify")
@@ -35,21 +35,21 @@ const ProfileSection = ({ user }) => {
 
   return (
     <>
-      <div class="bg-blue-500 font-mono shadow-xl rounded-lg py-3 w-full h-screen flex flex-col items-center">
-        <div class="text-center text-white text-4xl font-bold uppercase mt-10 mb-10">
+      <div className=" font-mono shadow-xl rounded-lg  w-full h-screen flex flex-col items-center">
+        <div className="text-center text-white text-4xl font-bold uppercase mt-4 mb-6">
           <p>Profile</p>
         </div>
-        <div class="photo-wrapper p-2 mt-10 mb-8 text-2xl font-semibold">
+        <div className="photo-wrapper p-2 mt-10 mb-8 text-2xl font-semibold">
           <img
-            class=" w-40 h-40 rounded-full mx-auto border-white border-4"
+            className=" w-40 h-40 rounded-full mx-auto border-white border-4"
             src={avatar}
             alt="John Doe"
           />
-          <h3 class="text-center text-white text-xl font-bold leading-12 uppercase mt-6">
+          <h3 className="text-center text-white text-xl font-bold leading-12 uppercase mt-6">
             {user.username}
           </h3>
         </div>
-        <div class="py-6 px-6 text-blue-700 bg-white rounded-xl shadow-md">
+        <div className="py-6 px-6 text-blue-700 bg-white rounded-xl shadow-md">
           <div className="flex w-full justify-center items-center">
             <div>
               <p className="px-2 py-2 font-semibold">Student ID</p>
