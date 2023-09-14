@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { notificationAge } from "../utils/time";
 import { Link } from "react-router-dom";
 
 const NotiWidget = ({ period }) => {
-  console.log(period);
-
-  const { future, past } = notificationAge(period.from);
-  console.log({ future, past });
+  const { future, past, present } = notificationAge(period.from, period.to);
+  console.log({ future, past, present });
   return (
     <>
       <Link
-        to={`${future ? `/location/${period.id}` : "#"}`}
-        className={`w-full my-2 p-2 ${future && "bg-white"} ${
+        to={`${future || present ? `/location/${period.id}` : "#"}`}
+        className={`w-full my-2 p-2 ${(future || present) && "bg-white"} ${
           past && "bg-stone-100"
         } rounded-lg shadow flex items-center `}
       >
@@ -22,7 +20,7 @@ const NotiWidget = ({ period }) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={`w-8  h-8 ${future && "text-stone-400"} ${
+            className={`w-8  h-8 ${(future || present) && "text-stone-400"} ${
               past && "text-stone-300"
             }`}
           >
@@ -35,14 +33,14 @@ const NotiWidget = ({ period }) => {
         </div>
         <div className="pl-2">
           <p
-            className={`${future && "text-stone-400"} ${
+            className={`${(future || present) && "text-stone-400"} ${
               past && "text-stone-300"
             } font-semibold`}
           >
             Upcomming Class
           </p>
           <span
-            className={`${future && "text-stone-400"} ${
+            className={`${(future || present) && "text-stone-400"} ${
               past && "text-stone-300"
             } text-sm`}
           >

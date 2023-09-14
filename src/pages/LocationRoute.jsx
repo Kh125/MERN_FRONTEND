@@ -10,6 +10,8 @@ import { style } from "../utils/mapStyle";
 import { useParams } from "react-router-dom";
 import { getPeriodData } from "../utils/indexDB";
 import PeriodInfo from "../components/PeriodInfo";
+import { notificationAge } from "../utils/time";
+import ClassAge from "../components/ClassAge";
 
 const LocationRoute = () => {
   const { id } = useParams();
@@ -57,7 +59,8 @@ const LocationRoute = () => {
   useEffect(() => {
     if (isLoaded) calculateRoute();
   }, [isLoaded]);
-  console.log({ location });
+  console.log({ location, notifiedPeriod });
+
   return (
     <>
       <div className="max-w-md mx-auto font-mono bg-blue-100 h-screen overflow-hidden">
@@ -112,6 +115,7 @@ const LocationRoute = () => {
               </div>
             </div>
             {notifiedPeriod && <PeriodInfo period={notifiedPeriod[0]} />}
+            {notifiedPeriod && <ClassAge period={notifiedPeriod[0]} />}
           </div>
         )}
       </div>
