@@ -5,14 +5,14 @@ const RedirectComponent = () => {
   return (
     <>
       <div className="flex justify-center items-center h-screen">
-        <div className="flex flex-col justify-center items-center mx-4 px-10 py-6 bg-blue-400 rounded-lg">
+        <div className="flex flex-col justify-center items-center mx-4 px-10 py-6 bg-blue-500 rounded-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-12 h-12 text-red-500"
+            className="w-12 h-12 mb-2 text-yellow-400"
           >
             <path
               strokeLinecap="round"
@@ -22,7 +22,7 @@ const RedirectComponent = () => {
           </svg>
 
           <div className="">
-            <p className="text-center mb-6">
+            <p className="text-center mb-6 text-white font-semibold">
               You need to be authenticated user to access this feature!
             </p>
             <div className="flex items-center justify-center mt-8">

@@ -40,6 +40,8 @@ const Schedule = () => {
   const currentDay = date.toLocaleDateString("en-US", {
     weekday: "long",
   });
+  const day = date.toLocaleTimeString();
+  console.log(day);
   return (
     <>
       {user ? (
@@ -51,8 +53,10 @@ const Schedule = () => {
                 Notify U
               </h1>
             </div>
-            <div className="pl-52 px-4 mb-6">
-              <AnalogClock {...options} />
+            <div className=" px-4 py-10 flex w-full items-center justify-end  rounded-lg">
+              <p className="text-3xl px-4 py-2 bg-white rounded-xl text-blue-800">
+                {day}
+              </p>
             </div>
 
             {!showDetailPage && (
@@ -97,11 +101,11 @@ const Schedule = () => {
             ) : (
               <>
                 {!isWeekend && !showDetailPage ? (
-                  <div className="bg-white pt-4 pb-10 rounded-t-custom-t h-screen shadow-lg">
+                  <div className="bg-white pt-4 bottom-10 fixed rounded-t-custom-t shadow-lg">
                     <p className="px-8 py-4 text-black text-2xl font-bold">
                       Today Classes
                     </p>
-                    <div className="overflow-y-scroll max-h-[400px] pt-2 pb-[4rem]">
+                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
                       {schedules &&
                         schedules[0] &&
                         schedules[0].Schedule &&

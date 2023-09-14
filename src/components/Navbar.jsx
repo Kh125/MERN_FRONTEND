@@ -3,7 +3,7 @@ import NavIcons from "./NavIcons";
 const NavBar = () => {
   return (
     <>
-      <div className="font-mono fixed bottom-2 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600 rounded-full shadow-lg">
+      <div className="font-poppins fixed bottom-2 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600 rounded-full shadow-lg">
         <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
           <NavIcons
             path="/"
