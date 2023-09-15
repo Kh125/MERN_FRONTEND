@@ -1,6 +1,6 @@
 import { adventurerNeutral } from "@dicebear/collection";
 import { createAvatar } from "@dicebear/core";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { convert } from "../utils/expend";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { auth } from "../shared/auth.state";
 
 const ProfileSection = ({ user }) => {
   const [isAuth, setIsAuth] = useRecoilState(auth);
+  const [logoutClick, setLogoutClick] = useState(false)
   const navigate = useNavigate();
   const year = convert(user.academicYear);
   const major = convert(user.major);
@@ -20,9 +21,10 @@ const ProfileSection = ({ user }) => {
   }, []);
 
   const onLogout = async () => {
+    setLogoutClick(true)
     await axios.post("/api/routes/logout").then(() => {
       setIsAuth(false);
-
+      setLogoutClick(false)
       setTimeout(() => {
         navigator.serviceWorker.controller.postMessage({ action: "logout" });
 
@@ -67,7 +69,7 @@ const ProfileSection = ({ user }) => {
           <button
             onClick={onLogout}
             type="button"
-            class="text-blue-700 bg-white hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-4 font-semibold rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            className="flex items-center justify-center text-blue-700 bg-white font-semibold rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
           >
             Logout
           </button>

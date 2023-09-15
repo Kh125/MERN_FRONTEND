@@ -25,6 +25,13 @@ const Weather = () => {
   // For skeleton loading
   const [skeletonLoading, setSkeletonLoading] = useState(false);
 
+  // Expand and
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   // Rotate refresh btn with skeleton loading
   const rotateWithSkeleton = () => {
     setRotationDegree(360);
@@ -114,10 +121,10 @@ const Weather = () => {
   }, [fetchWeather]);
 
   return (
-    <div className="max-w-md mx-auto font-sans   p-2">
-      <div className="max-w-md mx-auto  font-mono [word-spacing:-5px]">
+    <div className="max-w-md mx-auto font-sans pt-4">
+      <div className="max-w-md mx-auto font-mono [word-spacing:-5px]">
         {/* Current Weather */}
-        <div className="px-6 py-5 mb-2 bg-white rounded-2xl text-blue-500 shadow-md">
+        <div className="mx-3 px-6 py-5 mb-2 bg-white rounded-2xl text-blue-500 shadow-md">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl mb-1 font-semibold">
@@ -227,95 +234,103 @@ const Weather = () => {
           </div>
         </div>
 
-        {/* Hourly Weather */}
-        <div className="p-5 mb-2 bg-white rounded-2xl text-blue-500 shadow-md font-semibold">
-          {skeletonLoading ? (
-            <div>
-              <Skeleton height={20} className="mb-1" />
-              <Skeleton height={40} className="mb-1" />
-              <Skeleton height={20} />
-            </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              {hourlyWeather.lists.map((list, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col justify-center items-center"
-                >
-                  <p>
-                    {new Date(list.dt_txt).toLocaleTimeString("en-us", {
-                      hour: "numeric",
-                    })}
-                  </p>
+        <div className="mx-3 transition-all duration-500 px-6 py-2 mb-2 bg-white rounded-2xl text-blue-500 text-center shadow-md cursor-pointer" onClick={toggleExpand}>
+          {isExpanded ? 'Less' : 'More'}
+        </div>
 
-                  {/* Hourly Weather Image */}
-                  <img
-                    src={
-                      list.weather[0].icon
-                        ? `https://openweathermap.org/img/wn/${list.weather[0].icon}@2x.png`
-                        : ""
-                    }
-                    className="max-w-[60px] h-auto -my-1"
-                    alt=""
-                  />
-
-                  <p>{Math.round(list.main.temp)} &deg;C</p>
+        {isExpanded && (
+          <div className="mx-3">
+            {/* Hourly Weather */}
+            <div className="p-5 mb-2 bg-white rounded-2xl text-blue-500 shadow-md font-semibold">
+              {skeletonLoading ? (
+                <div>
+                  <Skeleton height={20} className="mb-1" />
+                  <Skeleton height={40} className="mb-1" />
+                  <Skeleton height={20} />
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              ) : (
+                <div className="flex justify-between items-center">
+                  {hourlyWeather.lists.map((list, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col justify-center items-center"
+                    >
+                      <p>
+                        {new Date(list.dt_txt).toLocaleTimeString("en-us", {
+                          hour: "numeric",
+                        })}
+                      </p>
 
-        {/* Other Weather Status */}
-        <div className="px-6 py-5 flex items-center bg-white rounded-2xl text-blue-500 shadow-md">
-          <div className="flex flex-col gap-4 flex-[1.5]">
-            <div>
-              <h2 className="font-bold">Feels Like</h2>
-              <p className="text-xl [word-spacing:-9px]">
-                {skeletonLoading ? (
-                  <Skeleton className="w-1/3" />
-                ) : (
-                  Math.round(currentWeather.feels_like) + " °C"
-                )}
-              </p>
+                      {/* Hourly Weather Image */}
+                      <img
+                        src={
+                          list.weather[0].icon
+                            ? `https://openweathermap.org/img/wn/${list.weather[0].icon}@2x.png`
+                            : ""
+                        }
+                        className="max-w-[60px] h-auto -my-1"
+                        alt=""
+                      />
+
+                      <p>{Math.round(list.main.temp)} &deg;C</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div>
-              <h2 className="font-bold">Wind</h2>
-              <p className="text-xl">
-                {skeletonLoading ? (
-                  <Skeleton className="w-1/3" />
-                ) : (
-                  currentWeather.windspeed + " m/s"
-                )}
-              </p>
+            {/* Other Weather Status */}
+            <div className="px-6 py-5 flex items-center bg-white rounded-2xl text-blue-500 shadow-md">
+              <div className="flex flex-col gap-4 flex-[1.5]">
+                <div>
+                  <h2 className="font-bold">Feels Like</h2>
+                  <p className="text-xl [word-spacing:-9px]">
+                    {skeletonLoading ? (
+                      <Skeleton className="w-1/3" />
+                    ) : (
+                      Math.round(currentWeather.feels_like) + " °C"
+                    )}
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="font-bold">Wind</h2>
+                  <p className="text-xl">
+                    {skeletonLoading ? (
+                      <Skeleton className="w-1/3" />
+                    ) : (
+                      currentWeather.windspeed + " m/s"
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 flex-[1]">
+                <div>
+                  <h2 className="font-bold">Humidity</h2>
+                  <p className="text-xl">
+                    {skeletonLoading ? (
+                      <Skeleton className="w-2/3" />
+                    ) : (
+                      currentWeather.humidity + " %"
+                    )}
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="font-bold">Pressure</h2>
+                  <p className="text-xl">
+                    {skeletonLoading ? (
+                      <Skeleton className="w-2/3" />
+                    ) : (
+                      currentWeather.pressure + " hPa"
+                    )}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="flex flex-col gap-4 flex-[1]">
-            <div>
-              <h2 className="font-bold">Humidity</h2>
-              <p className="text-xl">
-                {skeletonLoading ? (
-                  <Skeleton className="w-2/3" />
-                ) : (
-                  currentWeather.humidity + " %"
-                )}
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-bold">Pressure</h2>
-              <p className="text-xl">
-                {skeletonLoading ? (
-                  <Skeleton className="w-2/3" />
-                ) : (
-                  currentWeather.pressure + " hPa"
-                )}
-              </p>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
