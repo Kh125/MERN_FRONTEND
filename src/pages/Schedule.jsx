@@ -8,6 +8,7 @@ import { useSchedule } from "../hooks/schedule";
 import Relax from "../components/Relax";
 import WeekSchedule from "../components/WeekSchedule";
 import { useUserInfo } from "../hooks/userInfo";
+import logo from "../assets/logo.svg";
 
 const Schedule = () => {
   const user = useAuth();
@@ -48,10 +49,9 @@ const Schedule = () => {
         <div className="max-w-md mx-auto font-mono bg-blue-500 h-screen overflow-hidden">
           <div className="bg-blue-500 py-4">
             {/* Title Section */}
-            <div className="px-4 my-5">
-              <h1 className="text-custom-size-30 font-bold text-white">
-                Notify U
-              </h1>
+            <div className="px-4 flex items-center">
+              <img src={logo} className="w-14" alt="" />
+              <p className="pl-2 text-lg text-white font-semibold"> Notify U</p>
             </div>
             <div className=" px-4 py-10 flex w-full items-center justify-end  rounded-lg">
               <p className="text-3xl px-4 py-2 bg-white rounded-xl text-blue-800">

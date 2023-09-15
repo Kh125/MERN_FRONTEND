@@ -100,34 +100,67 @@ export const formatTimeWithLeadingZero = (time) => {
   return String(time).padStart(2, "0");
 };
 
-export const notificationAge = (inputTimeStr) => {
+export const notificationAge = (startTime, endTime) => {
   // Get the current date and time
   const currentDate = new Date();
 
   // Split the input time string into hours, minutes, and AM/PM
-  const [inputTime, ampm] = inputTimeStr.split(" ");
-  let [inputHours, inputMinutes] = inputTime.split(":").map(Number);
+  const [sTime, sampm] = startTime.split(" ");
+  let [sInputHour, sInputMinute] = sTime.split(":").map(Number);
+  const [eTime, eampm] = endTime.split(" ");
+  let [eInputHour, eInputMinute] = eTime.split(":").map(Number);
 
   // Convert input hours to 24-hour format if it's PM
-  if (ampm === "PM" && inputHours < 12) {
-    inputHours += 12;
+  if (sampm === "PM" && sInputHour < 12) {
+    sInputHour += 12;
+  }
+  if (eampm === "PM" && eInputHour < 12) {
+    eInputHour += 12;
   }
 
   // Create a new Date object using the current date and the input time
-  const inputDate = new Date(
+  const sInputDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
     currentDate.getDate(),
-    inputHours,
-    inputMinutes
+    sInputHour,
+    sInputMinute
+  );
+  const eInputDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    eInputHour,
+    eInputMinute
   );
 
   // Compare the two Date objects
-  if (currentDate > inputDate) {
-    return { future: false, past: true };
-  } else if (currentDate < inputDate) {
-    return { future: true, past: false };
-  } else {
-    console.log("The input time is right now.");
+  if (currentDate > eInputDate) {
+    return { future: false, past: true, present: false };
+  } else if (currentDate < sInputDate) {
+    return { future: true, past: false, present: false };
+  } else if (currentDate < eInputDate && currentDate > sInputDate) {
+    return { future: false, past: false, present: true };
   }
+};
+
+export const getTimeDifference = (inputTime) => {
+  // Parse the input time string into a Date object
+  const inputDate = new Date(`2000-01-01T${inputTime}`);
+
+  // Get the current time as a Date object
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifferenceMillis = currentDate - inputDate;
+
+  // Calculate the time difference in minutes
+  const timeDifferenceMinutes = Math.floor(timeDifferenceMillis / (1000 * 60));
+
+  // Calculate the time difference in hours
+  const timeDifferenceHours = Math.floor(
+    timeDifferenceMillis / (1000 * 60 * 60)
+  );
+
+  return { minutes: timeDifferenceMinutes, hours: timeDifferenceHours };
 };
