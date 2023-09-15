@@ -1,8 +1,9 @@
-export const storeDataInIndexedDB = (data) => {
+export const storeDataInIndexedDB = (data, major) => {
   const request = indexedDB.open("uniNotify", 2);
+  let db;
 
   request.onupgradeneeded = function (event) {
-    const db = event.target.result;
+    db = event.target.result;
 
     // Create object stores if they don't exist
     if (!db.objectStoreNames.contains("triggeredPeriods")) {
@@ -17,19 +18,44 @@ export const storeDataInIndexedDB = (data) => {
       });
 
       // Store the provided data
-      objectStore.add({ schedule: data });
+      objectStore.add({
+        major, 
+        schedule: data 
+      });
 
       console.log("Schedule Collection setup and data stored");
     }
   };
 
-  request.onsuccess = function (event) {
+  request.onsuccess = (event) => {
+    db = event.target.result;
+    const transaction = db.transaction(['schedule'], 'readwrite');
+    const objectStore = transaction.objectStore('schedule');
+
+    const addRequest = objectStore.add({
+      major, 
+      schedule: data 
+    });
+
+    addRequest.onsuccess = (event) => {
+      console.log('New data added successfully:', event.target.result);
+    };
+  
+    addRequest.onerror = (event) => {
+      console.error('Error adding data:', event.target.error);
+    };
+    
     console.log("Database opened successfully");
   };
 
-  request.onerror = function (event) {
+  request.onerror = (event) => {
     console.error("Error opening database:", event.target.error);
   };
+
+  request.oncomplete = () => {
+    db.close();
+    console.log("DB closed.");
+  }
 };
 
 export const clearObjectStore = (dbName, storeName) => {
@@ -74,6 +100,35 @@ export const getPeriodData = () => {
       res.onsuccess = () => {
         resolve(res.result);
       };
+    };
+  });
+};
+
+export const deleteIndexDB = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('uniNotify', 2);
+
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+
+      db.close();
+
+      const deleteRequest = indexedDB.deleteDatabase('uniNotify');
+
+      deleteRequest.onsuccess = () => {
+        console.log('Database deleted successfully');
+        resolve();
+      };
+
+      deleteRequest.onerror = (event) => {
+        console.error('Error deleting database', event.target.error);
+        reject(event.target.error);
+      };
+    };
+
+    request.onerror = (event) => {
+      console.error('Error opening database', event.target.error);
+      reject(event.target.error);
     };
   });
 };

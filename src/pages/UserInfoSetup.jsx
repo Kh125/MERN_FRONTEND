@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { convert } from "../utils/expend";
 import axios from "axios";
+import { useAuth } from "../hooks/auth";
+import { storeDataInIndexedDB } from "../utils/indexDB";
 
 const UserInfoSetup = () => {
     const [roll, setRoll] = useState("");
@@ -9,6 +11,7 @@ const UserInfoSetup = () => {
     const [year, setYear] = useState("");
     const [availableMajors, setAvailableMajors] = useState([])
     const navigate = useNavigate();
+    const user = useAuth();
     
     const handleYearChange = (e) => {
         const selectedYear = e.target.value;
@@ -35,6 +38,19 @@ const UserInfoSetup = () => {
         .then((response) => {
             const updatedUser = response.data.user
             localStorage.setItem("user", JSON.stringify(updatedUser));
+            console.log("Userinfo setup page", user);
+            const email = user.email
+            const password = user.password
+
+            axios.get("api/routes/getschedules", {
+                email, password
+              })
+              .then((res) => {
+                console.log("setupinfo response", major);
+                storeDataInIndexedDB(res.data[0]["Schedule"], major)
+                navigator.serviceWorker.controller.postMessage({ action: 'info-setup', major })
+              })
+
             setTimeout(() => navigate("/"), 1000);
         });
     };

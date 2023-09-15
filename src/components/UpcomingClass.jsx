@@ -26,7 +26,6 @@ const UpcomingClass = () => {
       schedules[0].Schedule &&
       schedules[0].Schedule[currentDay]
     ) {
-      storeDataInIndexedDB(schedules[0].Schedule);
       // Find the nearest or equal "from" time
       nearestClass = findNearestOrEqualTime(
         schedules[0].Schedule[currentDay],

@@ -3,8 +3,9 @@ const dynamic_cache_name = "dynamic_app_cache_v1"
 const public_key = 'BM8TS8LROkfyBsbGvSE8z7BjYZyNkgyxI_x7T6b22qDbKkWYK4Up9ljpYtA6n7kZzqsuQMuL2eRP6Bb0Oq0NYP4'
 var schedule_data = null
 // Set up the interval to call the periodic function
-const interval = 0.25 * 60 * 1000; // 1 minutes
+const interval = 0.25 * 60 * 1000; // 15 seconds
 let intervalId;
+let major;
 
 const urls_to_cache = [
     '/',
@@ -97,7 +98,14 @@ self.addEventListener('message', (event) => {
 
   if (event.data && event.data.action === 'login') {
     console.log("Interval Started");
+    major = event.data.major
+    console.log(major);
     startInterval()
+  }
+
+  if (event.data && event.data.action === 'info-setup') {
+    console.log("Info Setup Finished");
+    major = event.data.major
   }
 });
 
@@ -115,25 +123,30 @@ function showNotification(title, message, id) {
 
 const startInterval = () => {
   intervalId = setInterval(() => {
-    retrieveCurrentDateDataFromIndexedDB()
-      .then(({ currentDayData, triggeredPeriods }) => {
-        if(isWithinCustomizedTimeInterval()) {
-          const period = retrieveComingPeriodData(currentDayData, 15);
-          
-          if (period && !isMatched(period.Period, triggeredPeriods)) {
-                const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
-                showNotification('Upcoming Class', alertMessage, period.Period);
-                storeTriggeredPeriodToIndexedDB(period)
-          } else if (!period) {
-            showNotification('No classes');
+    try {
+      console.log(major);
+      retrieveCurrentDateDataFromIndexedDB()
+        .then(({ currentDayData, triggeredPeriods }) => {
+          if (isWithinCustomizedTimeInterval()) {
+            const period = retrieveComingPeriodData(currentDayData, 15);
+
+            if (period && !isMatched(period.Period, triggeredPeriods)) {
+              const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
+              showNotification('Upcoming Class', alertMessage, period.Period);
+              storeTriggeredPeriodToIndexedDB(period);
+            } else if (!period) {
+              showNotification('No classes');
+            }
           }
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Error in startInterval:', error);
+    }
   }, interval);
-}
+};
 
 const isMatched = (inputPeriod, triggeredPeriods) => {
   for (const period of triggeredPeriods) {
@@ -148,68 +161,79 @@ const isMatched = (inputPeriod, triggeredPeriods) => {
 //#region Private Methods
 const retrieveCurrentDateDataFromIndexedDB = () => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('uniNotify');
+    try {
+      const request = indexedDB.open('uniNotify', 2);
+      let db;
 
-    request.onupgradeneeded = function(event) {
-      const db = event.target.result;
-    
-      // Create object store if it doesn't exist
-      if (!db.objectStoreNames.contains('triggeredPeriods')) {
-        db.createObjectStore('triggeredPeriods', { keyPath: 'id' });
-      }
+      request.onsuccess = function (event) {
+        db = event.target.result;
+        const transaction = db.transaction(['schedule'], 'readonly');
+        const objectStore = transaction.objectStore('schedule');
+        const getRequest = objectStore.getAll();
+        const currentDay = getCurrentDayString();
 
-      if (!db.objectStoreNames.contains('schedule')) {
-        db.createObjectStore('schedule', { keyPath: 'id', autoIncrement: true });
-      }
-    };
+        getRequest.onsuccess = (event) => {
+          const allRecords = event.target.result;
+      
+          let data;
+          let currentDayData;
 
-    request.onsuccess = function(event) {
-      const db = event.target.result;
-      const transaction = db.transaction(['schedule'], 'readonly');
-      const objectStore = transaction.objectStore('schedule');
-      const getRequest = objectStore.get(1);
+          for (const record of allRecords) {
+            if (record.major === major) {
+              data = record;
+              break;
+            }
+          }
+          console.log('Filtered records with major "KE":', data);
 
-      const currentDay = getCurrentDayString();
+          if (data) {
+            if (data.major === major) {
+              console.log('Found a record with major "HPC":', data);
+              currentDayData = data.schedule[currentDay];
+              return;
+            }
 
-      getRequest.onsuccess = function(event) {
-        const data = event.target.result;
+            // Open a new transaction for triggeredPeriods
+            const triggeredTransaction = db.transaction(['triggeredPeriods'], 'readonly');
+            const triggeredObjectStore = triggeredTransaction.objectStore('triggeredPeriods');
+            const getTriggeredRequest = triggeredObjectStore.getAll();
 
-        if (data && data.schedule) {
-          const currentDayData = data.schedule[currentDay];
+            getTriggeredRequest.onsuccess = function (event) {
+              const triggeredPeriods = event.target.result;
 
-          // Open a new transaction for triggeredPeriods
-          const triggeredTransaction = db.transaction(['triggeredPeriods'], 'readonly');
-          const triggeredObjectStore = triggeredTransaction.objectStore('triggeredPeriods');
-          const getTriggeredRequest = triggeredObjectStore.getAll();
+              console.log(currentDayData, triggeredPeriods);
+              resolve({
+                currentDayData: currentDayData,
+                triggeredPeriods: triggeredPeriods
+              });
+            };
 
-          getTriggeredRequest.onsuccess = function(event) {
-            const triggeredPeriods = event.target.result;
+            getTriggeredRequest.onerror = function (event) {
+              reject(event.target.error);
+            };
+          } else {
+            reject(new Error('No data for the current day'));
+          }
+        };
 
-            console.log(currentDayData, triggeredPeriods);
-            resolve({
-              currentDayData: currentDayData,
-              triggeredPeriods: triggeredPeriods
-            });
-          };
-
-          getTriggeredRequest.onerror = function(event) {
-            reject(event.target.error);
-          };
-        } else {
-          reject(new Error('No data for the current day'));
-        }
+        getRequest.onerror = function (event) {
+          reject(event.target.error);
+        };
       };
 
-      getRequest.onerror = function(event) {
+      request.onerror = function (event) {
         reject(event.target.error);
       };
-    };
 
-    request.onerror = function(event) {
-      reject(event.target.error);
-    };
+      request.oncomplete = function () {
+        db.close();
+      }
+    } catch (error) {
+      reject(error);
+    }
   });
 };
+
 
 const retrieveComingPeriodData = (periodList, minutes) => {
   const currentTimestamp = Date.now()
@@ -271,9 +295,10 @@ function isWithinCustomizedTimeInterval() {
 
 function storeTriggeredPeriodToIndexedDB(period) {
   const request = indexedDB.open('uniNotify', 2);
+  let db;
 
   request.onsuccess = function(event) {
-    const db = event.target.result;
+    db = event.target.result;
 
     const transaction = db.transaction(['triggeredPeriods'], 'readwrite');
     const objectStore = transaction.objectStore('triggeredPeriods');
@@ -297,5 +322,9 @@ function storeTriggeredPeriodToIndexedDB(period) {
   request.onerror = function(event) {
     console.error('Error opening database:', event.target.error);
   };
+
+  request.oncomplete = () => {
+    db.close()
+  }
 }
 //#endregion
