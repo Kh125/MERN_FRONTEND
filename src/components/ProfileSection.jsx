@@ -9,7 +9,6 @@ import { auth } from "../shared/auth.state";
 
 const ProfileSection = ({ user }) => {
   const [isAuth, setIsAuth] = useRecoilState(auth);
-  const [logoutClick, setLogoutClick] = useState(false)
   const navigate = useNavigate();
   const year = convert(user.academicYear);
   const major = convert(user.major);
@@ -21,13 +20,14 @@ const ProfileSection = ({ user }) => {
   }, []);
 
   const onLogout = async () => {
-    setLogoutClick(true)
+    if (navigator?.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage({ action: "logout" });
+    }
+
     await axios.post("/api/routes/logout").then(() => {
       setIsAuth(false);
-      setLogoutClick(false)
-      setTimeout(() => {
-        navigator.serviceWorker.controller.postMessage({ action: "logout" });
 
+      setTimeout(() => {
         navigate("/");
       }, 1000);
     });

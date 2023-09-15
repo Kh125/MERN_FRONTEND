@@ -6,44 +6,60 @@ import { useAuth } from "../hooks/auth";
 import { storeDataInIndexedDB } from "../utils/indexDB";
 
 const UserInfoSetup = () => {
-    const [roll, setRoll] = useState("");
-    const [major, setMajor] = useState("");
-    const [year, setYear] = useState("");
-    const [availableMajors, setAvailableMajors] = useState([])
-    const navigate = useNavigate();
-    const user = useAuth();
-    
-    const handleYearChange = (e) => {
-        const selectedYear = e.target.value;
-        setYear(selectedYear);
+  const [roll, setRoll] = useState("");
+  const [major, setMajor] = useState("");
+  const [year, setYear] = useState("");
+  const [availableMajors, setAvailableMajors] = useState([]);
+  const navigate = useNavigate();
+  const user = useAuth();
 
-    const onSubmit = async (e) => {
-        e.preventDefault();
+  const handleYearChange = (e) => {
+    const selectedYear = e.target.value;
+    setYear(selectedYear);
+
+    // Define the available majors based on the selected academic year
+    if (selectedYear === "3") {
+      setAvailableMajors(["CS", "CT"]);
+    } else if (selectedYear === "4" || selectedYear === "5") {
+      setAvailableMajors(["HPC", "CN", "KE", "SE", "BIS", "ES"]);
+    } else {
+      setAvailableMajors([]);
+    }
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    axios
+      .post("/api/routes/updateinfo", {
+        studentId: roll,
+        academicYear: year,
+        major: major,
+      })
+      .then((response) => {
+        const updatedUser = response.data.user;
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        console.log("Userinfo setup page", user);
+        const email = user.email;
+        const password = user.password;
+
         axios
-        .post("/api/routes/updateinfo", {
-            studentId: roll,
-            academicYear: year,
-            major: major,
-        })
-        .then((response) => {
-            const updatedUser = response.data.user
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-            console.log("Userinfo setup page", user);
-            const email = user.email
-            const password = user.password
+          .get("api/routes/getschedules", {
+            email,
+            password,
+          })
+          .then((res) => {
+            console.log("setupinfo response", major);
+            storeDataInIndexedDB(res.data[0]["Schedule"], major);
+            if (navigator?.serviceWorker?.controller) {
+              navigator.serviceWorker.controller.postMessage({
+                action: "info-setup",
+                major,
+              });
+            }
+          });
 
-            axios.get("api/routes/getschedules", {
-                email, password
-              })
-              .then((res) => {
-                console.log("setupinfo response", major);
-                storeDataInIndexedDB(res.data[0]["Schedule"], major)
-                navigator.serviceWorker.controller.postMessage({ action: 'info-setup', major })
-              })
-
-            setTimeout(() => navigate("/"), 1000);
-        });
-    };
+        setTimeout(() => navigate("/"), 1000);
+      });
   };
 
   return (

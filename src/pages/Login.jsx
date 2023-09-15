@@ -23,6 +23,10 @@ const Login = () => {
       .then((loginRes) => {
         setIsAuth(true);
 
+        if(navigator?.serviceWorker?.controller) {
+          navigator.serviceWorker.controller.postMessage({ action: 'login', major: loginRes.data["user"]["major"] })
+        }
+
         requestNotificationPermission()
 
         axios.get("api/routes/getschedules", {
@@ -35,7 +39,6 @@ const Login = () => {
         })
 
         setTimeout(() => {
-          navigator.serviceWorker.controller.postMessage({ action: 'login', major: loginRes.data["user"]["major"] })
           navigate("/")
         }, 1000);
       })

@@ -1,18 +1,14 @@
-const static_cache_name = "app_cache_v1"
-const dynamic_cache_name = "dynamic_app_cache_v1"
-const public_key = 'BM8TS8LROkfyBsbGvSE8z7BjYZyNkgyxI_x7T6b22qDbKkWYK4Up9ljpYtA6n7kZzqsuQMuL2eRP6Bb0Oq0NYP4'
-var schedule_data = null
+const static_cache_name = "app_cache_v1";
+const dynamic_cache_name = "dynamic_app_cache_v1";
+const public_key =
+  "BM8TS8LROkfyBsbGvSE8z7BjYZyNkgyxI_x7T6b22qDbKkWYK4Up9ljpYtA6n7kZzqsuQMuL2eRP6Bb0Oq0NYP4";
+var schedule_data = null;
 // Set up the interval to call the periodic function
 const interval = 0.25 * 60 * 1000; // 15 seconds
 let intervalId;
 let major;
 
-const urls_to_cache = [
-    '/',
-    'vite.svg',
-    'notification-icon.svg',
-    '/schedule'
-]
+const urls_to_cache = ["/", "vite.svg", "notification-icon.svg", "/schedule"];
 
 //  install event
 self.addEventListener("install", (evt) => {
@@ -23,7 +19,7 @@ self.addEventListener("install", (evt) => {
       try {
         cache.addAll(urls_to_cache);
       } catch (error) {
-        console.error('Error caching resources:', error);
+        console.error("Error caching resources:", error);
       }
     })
   );
@@ -46,7 +42,7 @@ self.addEventListener("activate", (evt) => {
 });
 
 //fetch event handler
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
@@ -59,53 +55,51 @@ self.addEventListener('fetch', (event) => {
   console.log("Fetch Event Activated.");
 });
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener("notificationclick", function (event) {
   event.notification.close(); // Close the notification
 
   const customData = event.notification.data; // Access the custom data
 
   const url = `http://localhost:5173/location/${customData.id}`;
 
-  event.waitUntil(
-    clients.openWindow(url)
-  );
+  event.waitUntil(clients.openWindow(url));
 });
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.action === 'subscribeUser') {
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.action === "subscribeUser") {
     // Function to subscribe the user for push notifications
     const subscribeUser = () => {
-        return self.registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: public_key,
-        });
-    }
+      return self.registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: public_key,
+      });
+    };
 
     // Subscribe the user
     subscribeUser()
       .then((subscription) => {
-        console.log('User subscribed:', subscription);
+        console.log("User subscribed:", subscription);
       })
       .catch((error) => {
-        console.error('Failed to subscribe user:', error);
+        console.error("Failed to subscribe user:", error);
       });
   }
 
-  if (event.data && event.data.action === 'logout') {
+  if (event.data && event.data.action === "logout") {
     console.log("Interval Cleared");
-    clearInterval(intervalId)
+    clearInterval(intervalId);
   }
 
-  if (event.data && event.data.action === 'login') {
+  if (event.data && event.data.action === "login") {
     console.log("Interval Started");
-    major = event.data.major
+    major = event.data.major;
     console.log(major);
-    startInterval()
+    startInterval();
   }
 
-  if (event.data && event.data.action === 'info-setup') {
+  if (event.data && event.data.action === "info-setup") {
     console.log("Info Setup Finished");
-    major = event.data.major
+    major = event.data.major;
   }
 });
 
@@ -114,10 +108,10 @@ function showNotification(title, message, id) {
   // Send a push notification
   self.registration.showNotification(title, {
     body: message,
-    icon: 'notification-icon.svg', // Path to the notification icon
+    icon: "notification-icon.svg", // Path to the notification icon
     data: {
-      id
-    }
+      id,
+    },
   });
 }
 
@@ -132,18 +126,18 @@ const startInterval = () => {
 
             if (period && !isMatched(period.Period, triggeredPeriods)) {
               const alertMessage = `Class "${period.Subject}" is starting in 15 minutes at ${period.Location}.`;
-              showNotification('Upcoming Class', alertMessage, period.Period);
+              showNotification("Upcoming Class", alertMessage, period.Period);
               storeTriggeredPeriodToIndexedDB(period);
             } else if (!period) {
-              showNotification('No classes');
+              showNotification("No classes");
             }
           }
         })
-        .catch(error => {
-          console.error('Error:', error);
+        .catch((error) => {
+          console.error("Error:", error);
         });
     } catch (error) {
-      console.error('Error in startInterval:', error);
+      console.error("Error in startInterval:", error);
     }
   }, interval);
 };
@@ -151,30 +145,30 @@ const startInterval = () => {
 const isMatched = (inputPeriod, triggeredPeriods) => {
   for (const period of triggeredPeriods) {
     if (period.id === inputPeriod) {
-      return true
+      return true;
     }
   }
 
-  return false
-}
+  return false;
+};
 
 //#region Private Methods
 const retrieveCurrentDateDataFromIndexedDB = () => {
   return new Promise((resolve, reject) => {
     try {
-      const request = indexedDB.open('uniNotify', 2);
+      const request = indexedDB.open("uniNotify", 2);
       let db;
 
       request.onsuccess = function (event) {
         db = event.target.result;
-        const transaction = db.transaction(['schedule'], 'readonly');
-        const objectStore = transaction.objectStore('schedule');
+        const transaction = db.transaction(["schedule"], "readonly");
+        const objectStore = transaction.objectStore("schedule");
         const getRequest = objectStore.getAll();
         const currentDay = getCurrentDayString();
 
         getRequest.onsuccess = (event) => {
           const allRecords = event.target.result;
-      
+
           let data;
           let currentDayData;
 
@@ -192,8 +186,12 @@ const retrieveCurrentDateDataFromIndexedDB = () => {
               currentDayData = data.schedule[currentDay];
 
               // Open a new transaction for triggeredPeriods
-              const triggeredTransaction = db.transaction(['triggeredPeriods'], 'readonly');
-              const triggeredObjectStore = triggeredTransaction.objectStore('triggeredPeriods');
+              const triggeredTransaction = db.transaction(
+                ["triggeredPeriods"],
+                "readonly"
+              );
+              const triggeredObjectStore =
+                triggeredTransaction.objectStore("triggeredPeriods");
               const getTriggeredRequest = triggeredObjectStore.getAll();
 
               getTriggeredRequest.onsuccess = function (event) {
@@ -202,7 +200,7 @@ const retrieveCurrentDateDataFromIndexedDB = () => {
                 console.log(currentDayData, triggeredPeriods);
                 resolve({
                   currentDayData: currentDayData,
-                  triggeredPeriods: triggeredPeriods
+                  triggeredPeriods: triggeredPeriods,
                 });
               };
 
@@ -213,7 +211,7 @@ const retrieveCurrentDateDataFromIndexedDB = () => {
               return;
             }
           } else {
-            reject(new Error('No data for the current day'));
+            reject(new Error("No data for the current day"));
           }
         };
 
@@ -228,40 +226,47 @@ const retrieveCurrentDateDataFromIndexedDB = () => {
 
       request.oncomplete = function () {
         db.close();
-      }
+      };
     } catch (error) {
       reject(error);
     }
   });
 };
 
-
 const retrieveComingPeriodData = (periodList, minutes) => {
-  const currentTimestamp = Date.now()
-  const nextTimeStamp = currentTimestamp + (minutes * 60 * 1000) // 15 minute in milliseconds
+  const currentTimestamp = Date.now();
+  const nextTimeStamp = currentTimestamp + minutes * 60 * 1000; // 15 minute in milliseconds
 
-  for(const period of periodList) {
-    const fromTimestamp = getTimestamp(period.from)
+  for (const period of periodList) {
+    const fromTimestamp = getTimestamp(period.from);
 
-    if(fromTimestamp >= currentTimestamp && fromTimestamp <= nextTimeStamp){
-      return period
+    if (fromTimestamp >= currentTimestamp && fromTimestamp <= nextTimeStamp) {
+      return period;
     }
   }
 
-  return false
-}
+  return false;
+};
 
 const getCurrentDayString = () => {
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
   const currentDate = new Date();
   return daysOfWeek[currentDate.getDay()];
-}
+};
 
 // Generate timestamp format for input time
 function getTimestamp(timeString) {
   // Split the time string into hours and minutes
-  const [time, period] = timeString.split(' ');
-  const [hours, minutes] = time.split(':').map(Number);
+  const [time, period] = timeString.split(" ");
+  const [hours, minutes] = time.split(":").map(Number);
 
   // Create a new Date object with today's date and the specified time
   const date = new Date();
@@ -279,34 +284,48 @@ function getTimestamp(timeString) {
 
 function isTimeWithinInterval(startHour, startMinute, endHour, endMinute) {
   const now = new Date();
-  const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
-  const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
+  const startTime = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    startHour,
+    startMinute
+  );
+  const endTime = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    endHour,
+    endMinute
+  );
 
   return now >= startTime && now <= endTime;
 }
 
 function isWithinCustomizedTimeInterval() {
-  return isTimeWithinInterval(8, 15, 8, 30) ||
-  isTimeWithinInterval(9, 25, 9, 40) ||
-  isTimeWithinInterval(10, 35, 10, 50) ||
-  isTimeWithinInterval(12, 25, 12, 40) ||
-  isTimeWithinInterval(13, 35, 13, 50) ||
-  isTimeWithinInterval(14, 45, 15, 0)
+  return (
+    isTimeWithinInterval(8, 15, 8, 30) ||
+    isTimeWithinInterval(9, 25, 9, 40) ||
+    isTimeWithinInterval(10, 35, 10, 50) ||
+    isTimeWithinInterval(12, 25, 12, 40) ||
+    isTimeWithinInterval(13, 35, 13, 50) ||
+    isTimeWithinInterval(14, 45, 15, 0)
+  );
 }
 
 function storeTriggeredPeriodToIndexedDB(period) {
-  const request = indexedDB.open('uniNotify', 2);
+  const request = indexedDB.open("uniNotify", 2);
   let db;
 
-  request.onsuccess = function(event) {
+  request.onsuccess = function (event) {
     db = event.target.result;
 
-    const transaction = db.transaction(['triggeredPeriods'], 'readwrite');
-    const objectStore = transaction.objectStore('triggeredPeriods');
+    const transaction = db.transaction(["triggeredPeriods"], "readwrite");
+    const objectStore = transaction.objectStore("triggeredPeriods");
     // current timestamp
     const timestamp = new Date().getTime();
 
-    objectStore.add({ 
+    objectStore.add({
       id: period.Period,
       lecture: period.Lecture,
       location: period.Location,
@@ -316,16 +335,16 @@ function storeTriggeredPeriodToIndexedDB(period) {
       teacherPhNo: period.TeacherPhNo,
       from: period.from,
       to: period.to,
-      timestamp
+      timestamp,
     });
   };
 
-  request.onerror = function(event) {
-    console.error('Error opening database:', event.target.error);
+  request.onerror = function (event) {
+    console.error("Error opening database:", event.target.error);
   };
 
   request.oncomplete = () => {
-    db.close()
-  }
+    db.close();
+  };
 }
 //#endregion
