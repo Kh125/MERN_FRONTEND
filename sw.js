@@ -190,27 +190,28 @@ const retrieveCurrentDateDataFromIndexedDB = () => {
             if (data.major === major) {
               console.log('Found a record with major "HPC":', data);
               currentDayData = data.schedule[currentDay];
+
+              // Open a new transaction for triggeredPeriods
+              const triggeredTransaction = db.transaction(['triggeredPeriods'], 'readonly');
+              const triggeredObjectStore = triggeredTransaction.objectStore('triggeredPeriods');
+              const getTriggeredRequest = triggeredObjectStore.getAll();
+
+              getTriggeredRequest.onsuccess = function (event) {
+                const triggeredPeriods = event.target.result;
+
+                console.log(currentDayData, triggeredPeriods);
+                resolve({
+                  currentDayData: currentDayData,
+                  triggeredPeriods: triggeredPeriods
+                });
+              };
+
+              getTriggeredRequest.onerror = function (event) {
+                reject(event.target.error);
+              };
+
               return;
             }
-
-            // Open a new transaction for triggeredPeriods
-            const triggeredTransaction = db.transaction(['triggeredPeriods'], 'readonly');
-            const triggeredObjectStore = triggeredTransaction.objectStore('triggeredPeriods');
-            const getTriggeredRequest = triggeredObjectStore.getAll();
-
-            getTriggeredRequest.onsuccess = function (event) {
-              const triggeredPeriods = event.target.result;
-
-              console.log(currentDayData, triggeredPeriods);
-              resolve({
-                currentDayData: currentDayData,
-                triggeredPeriods: triggeredPeriods
-              });
-            };
-
-            getTriggeredRequest.onerror = function (event) {
-              reject(event.target.error);
-            };
           } else {
             reject(new Error('No data for the current day'));
           }

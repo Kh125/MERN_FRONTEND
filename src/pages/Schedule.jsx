@@ -101,11 +101,11 @@ const Schedule = () => {
             ) : (
               <>
                 {!isWeekend && !showDetailPage ? (
-                  <div className="bg-white pt-4 bottom-10 fixed rounded-t-custom-t shadow-lg">
+                  <div className="bg-white pt-4 max-h-[500px] bottom-10 fixed rounded-t-custom-t shadow-lg w-full">
                     <p className="px-8 py-4 text-black text-2xl font-bold">
                       Today Classes
                     </p>
-                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[4rem]">
+                    <div className="overflow-y-scroll max-h-[500px] pt-2 pb-[7rem]">
                       {schedules &&
                         schedules[0] &&
                         schedules[0].Schedule &&
